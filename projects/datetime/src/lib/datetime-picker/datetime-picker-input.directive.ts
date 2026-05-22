@@ -35,6 +35,7 @@ export class SdDatetimePickerInput<D = Date> implements ControlValueAccessor, On
   public ngOnInit(): void {
     const p = this.picker();
     p.setAnchor(this.elementRef.nativeElement);
+    p.setInputDisabledState(this.isDisabled);
     this.subs.add(p.applied.subscribe((value: D) => {
       this.onChange(value);
       this.writeValue(value);
@@ -69,6 +70,11 @@ export class SdDatetimePickerInput<D = Date> implements ControlValueAccessor, On
   public registerOnTouched(fn: () => void): void { this.onTouched = fn; }
   public setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+    try {
+      this.picker().setInputDisabledState(isDisabled);
+    } catch {
+      // picker signal not yet available (before view init); ngOnInit will sync it.
+    }
   }
 
   @HostListener('blur') public onBlur(): void { this.onTouched(); }

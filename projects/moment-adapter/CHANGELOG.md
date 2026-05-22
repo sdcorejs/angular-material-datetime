@@ -1,5 +1,11 @@
 # @sdcorejs/angular-material-datetime-moment
 
+## 1.0.2
+
+### Patch Changes
+
+- Version-aligned patch release with `@sdcorejs/angular-material-datetime@1.0.2`.
+
 ## 1.0.1
 
 ### Patch Changes

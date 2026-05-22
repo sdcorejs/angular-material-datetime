@@ -1,6 +1,6 @@
 {
   "name": "@sdcorejs/angular-material-datetime",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Datetime, timepicker, and date-range picker for Angular Material — adapter-pluggable",
   "license": "MIT",
   "repository": {

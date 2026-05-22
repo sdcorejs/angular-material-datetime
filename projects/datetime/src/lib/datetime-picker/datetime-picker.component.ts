@@ -42,17 +42,25 @@ export class SdDatetimePicker<D = Date> implements OnDestroy {
 
   public readonly selected = computed(() => this._selected());
   public readonly opened = computed(() => this._opened());
+  public readonly disabledEffective = computed(() => this.disabled() || this._inputDisabled());
 
   public readonly panelTemplate = viewChild.required<TemplateRef<unknown>>('panel');
 
   private overlayRef: OverlayRef | null = null;
   private anchorEl: HTMLElement | null = null;
+  private readonly _inputDisabled = signal<boolean>(false);
 
   /** Anchor the overlay to a specific input element (set by the input directive). */
   public setAnchor(el: HTMLElement | null): void { this.anchorEl = el; }
 
+  /** Sync disabled state from the ControlValueAccessor input directive. */
+  public setInputDisabledState(isDisabled: boolean): void {
+    this._inputDisabled.set(isDisabled);
+    if (isDisabled) this.close();
+  }
+
   public open(): void {
-    if (this.disabled() || this._opened()) return;
+    if (this.disabledEffective() || this._opened()) return;
     const anchor = this.anchorEl ?? document.body;
     const position = this.overlay.position()
       .flexibleConnectedTo(anchor)

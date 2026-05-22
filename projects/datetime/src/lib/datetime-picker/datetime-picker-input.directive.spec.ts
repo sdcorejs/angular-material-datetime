@@ -5,12 +5,14 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { provideSdNativeDateAdapter } from '../native/provide-native';
 import { SdDatetimePicker } from './datetime-picker.component';
 import { SdDatetimePickerInput } from './datetime-picker-input.directive';
+import { SdDatetimePickerToggle } from './datetime-picker-toggle.directive';
 
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule, SdDatetimePicker, SdDatetimePickerInput],
+  imports: [ReactiveFormsModule, SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle],
   template: `
     <input [sdDatetimePicker]="picker" [formControl]="ctrl">
+    <button [sdDatetimePickerToggle]="picker">Open</button>
     <sd-datetime-picker #picker></sd-datetime-picker>
   `,
 })
@@ -63,6 +65,29 @@ describe('SdDatetimePickerInput (CVA)', () => {
     fix.detectChanges();
     const input = fix.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
     expect(input.disabled).toBe(true);
+  });
+
+  it('disabling formControl prevents the picker from opening', () => {
+    const fix = TestBed.createComponent(HostCmp);
+    fix.detectChanges();
+    const picker = fix.debugElement.query(By.directive(SdDatetimePicker)).componentInstance as SdDatetimePicker<Date>;
+    fix.componentInstance.ctrl.disable();
+    fix.detectChanges();
+    const button = fix.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+    button.click();
+    expect(picker.opened()).toBe(false);
+  });
+
+  it('disabling formControl closes an already opened picker', () => {
+    const fix = TestBed.createComponent(HostCmp);
+    fix.detectChanges();
+    const picker = fix.debugElement.query(By.directive(SdDatetimePicker)).componentInstance as SdDatetimePicker<Date>;
+    picker.open();
+    expect(picker.opened()).toBe(true);
+    fix.componentInstance.ctrl.disable();
+    fix.detectChanges();
+    expect(picker.opened()).toBe(false);
   });
 
   it('setDisabledState false re-enables the input element', () => {

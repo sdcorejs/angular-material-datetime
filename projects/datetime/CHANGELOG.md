@@ -1,5 +1,11 @@
 # @sdcorejs/angular-material-datetime
 
+## 1.0.2
+
+### Patch Changes
+
+- Prevent the datetime picker and toggle from opening when the bound form control is disabled.
+
 ## 1.0.1
 
 ### Patch Changes
