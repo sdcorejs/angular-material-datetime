@@ -52,8 +52,29 @@ module.exports = tsEslint.config(
       // with "Component" — e.g. SdTimeSpinner, SdDatepicker are acceptable
       '@angular-eslint/component-class-suffix': [
         'error',
-        { suffixes: ['Component', 'Spinner', 'Picker', 'Panel', 'Dialog', 'Header', 'Footer'] },
+        { suffixes: ['Component', 'Spinner', 'Picker', 'Panel', 'Dialog', 'Header', 'Footer', 'Actions'] },
       ],
+      // Allow directive class names without "Directive" suffix, following
+      // Angular Material convention (e.g. MatSort, MatRipple, SdDatetimePickerApply)
+      '@angular-eslint/directive-class-suffix': [
+        'error',
+        { suffixes: ['Directive', 'Apply', 'Cancel', 'Clear'] },
+      ],
+    },
+  },
+
+  // ── Library spec files: relax class-name suffix rules for host fixtures ──────
+  {
+    files: [
+      'projects/datetime/**/*.spec.ts',
+      'projects/moment-adapter/**/*.spec.ts',
+      'projects/date-fns-adapter/**/*.spec.ts',
+    ],
+    rules: {
+      // Host component fixture classes in specs (e.g. HostCmp) need not
+      // match the library class-suffix conventions
+      '@angular-eslint/component-class-suffix': 'off',
+      '@angular-eslint/directive-class-suffix': 'off',
     },
   },
 

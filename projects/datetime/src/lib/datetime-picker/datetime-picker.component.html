@@ -16,5 +16,7 @@
       [disabled]="disabled()"
       (valueChange)="select($any($event))">
     </sd-time-spinner>
+
+    <ng-content select="sd-datetime-picker-actions"></ng-content>
   </div>
 }

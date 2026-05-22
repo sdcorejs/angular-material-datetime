@@ -25,6 +25,8 @@ export class SdDatetimePicker<D = Date> {
 
   public readonly selectedChange = output<D>();
   public readonly closed = output<void>();
+  public readonly applied = output<D>();
+  public readonly cleared = output<void>();
 
   private readonly _selected = signal<D | null>(null);
   private readonly _opened = signal<boolean>(false);
@@ -45,5 +47,17 @@ export class SdDatetimePicker<D = Date> {
 
   public select(value: D): void {
     this._selected.set(value);
+  }
+
+  public apply(): void {
+    const v = this._selected();
+    if (v != null) this.applied.emit(v);
+    this.close();
+  }
+
+  public clear(): void {
+    this._selected.set(null);
+    this.cleared.emit();
+    this.close();
   }
 }
