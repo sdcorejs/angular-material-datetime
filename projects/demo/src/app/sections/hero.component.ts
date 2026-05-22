@@ -8,7 +8,7 @@ import { CodeBlockComponent } from '../code-block.component';
   template: `
     <section class="hero">
       <div class="hero-inner">
-        <img src="assets/brand/logo-text.png" alt="SDCoreJS" class="hero-logo">
+        <img src="brand/logo-text.png" alt="SDCoreJS" class="hero-logo">
         <h1 class="hero-heading">Angular Material Datetime</h1>
         <p class="hero-sub">
           Datetime, timepicker, and date-range picker for Angular Material —

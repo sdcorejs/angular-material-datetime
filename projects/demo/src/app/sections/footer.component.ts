@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <div class="footer-inner">
 
         <div class="footer-col footer-brand">
-          <img src="assets/brand/logo.png" alt="SDCoreJS" class="footer-logo">
+          <img src="brand/logo.png" alt="SDCoreJS" class="footer-logo">
           <p class="footer-copy">&copy; 2026 SDCoreJS contributors</p>
           <p class="footer-license">Released under the MIT License</p>
         </div>

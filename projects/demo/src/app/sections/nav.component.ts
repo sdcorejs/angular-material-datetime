@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   template: `
     <nav class="top-nav">
       <a class="nav-brand" href="https://github.com/sdcorejs/angular-material-datetime" target="_blank" rel="noopener noreferrer">
-        <img src="assets/brand/logo.png" alt="SDCoreJS logo" class="nav-logo">
+        <img src="brand/logo.png" alt="SDCoreJS logo" class="nav-logo">
         <span class="nav-title">sdcorejs/angular-material-datetime</span>
       </a>
       <ul class="nav-links">
