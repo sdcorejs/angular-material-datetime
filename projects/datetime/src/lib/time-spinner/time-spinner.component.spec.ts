@@ -43,3 +43,80 @@ describe('SdTimeSpinner', () => {
     expect(component.second()).toBe(15);
   });
 });
+
+describe('SdTimeSpinner step buttons', () => {
+  let fixture: ComponentFixture<SdTimeSpinner>;
+  let component: SdTimeSpinner;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    fixture = TestBed.createComponent(SdTimeSpinner);
+    component = fixture.componentInstance;
+  });
+
+  it('stepHourUp increments hour and emits valueChange', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 0, 0));
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.stepHourUp();
+    expect(spy).toHaveBeenCalledWith(expect.any(Date));
+    expect(spy.mock.calls[0][0].getHours()).toBe(11);
+  });
+
+  it('stepHourUp wraps 23 → 0', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 23, 0, 0));
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.stepHourUp();
+    expect(spy.mock.calls[0][0].getHours()).toBe(0);
+  });
+
+  it('stepHourDown wraps 0 → 23', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 0, 0, 0));
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.stepHourDown();
+    expect(spy.mock.calls[0][0].getHours()).toBe(23);
+  });
+
+  it('stepMinuteUp respects stepMinute=5', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 0, 0));
+    fixture.componentRef.setInput('stepMinute', 5);
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.stepMinuteUp();
+    expect(spy.mock.calls[0][0].getMinutes()).toBe(5);
+  });
+
+  it('stepMinuteUp wraps 59 → 0', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 59, 0));
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.stepMinuteUp();
+    expect(spy.mock.calls[0][0].getMinutes()).toBe(0);
+  });
+
+  it('stepSecondUp increments by 1 and wraps 59 → 0', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 30, 59));
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.stepSecondUp();
+    expect(spy.mock.calls[0][0].getSeconds()).toBe(0);
+  });
+
+  it('does nothing when disabled', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 0, 0));
+    fixture.componentRef.setInput('disabled', true);
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.stepHourUp();
+    expect(spy).not.toHaveBeenCalled();
+  });
+});

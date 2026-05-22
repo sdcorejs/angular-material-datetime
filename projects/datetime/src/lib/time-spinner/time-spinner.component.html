@@ -1,10 +1,39 @@
-<!-- minimal shell; full UI added in T19/T20 -->
 <div class="sd-time-spinner__columns">
-  <span class="sd-time-spinner__hour">{{ hour() | number:'2.0-0' }}</span>
-  <span>:</span>
-  <span class="sd-time-spinner__minute">{{ minute() | number:'2.0-0' }}</span>
+  <!-- hour -->
+  <div class="sd-time-spinner__col">
+    <button mat-icon-button [disabled]="disabled()" (click)="stepHourUp()" aria-label="Increment hour">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <span class="sd-time-spinner__digits">{{ hour() | number:'2.0-0' }}</span>
+    <button mat-icon-button [disabled]="disabled()" (click)="stepHourDown()" aria-label="Decrement hour">
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+  </div>
+
+  <span class="sd-time-spinner__sep">:</span>
+
+  <!-- minute -->
+  <div class="sd-time-spinner__col">
+    <button mat-icon-button [disabled]="disabled()" (click)="stepMinuteUp()" aria-label="Increment minute">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <span class="sd-time-spinner__digits">{{ minute() | number:'2.0-0' }}</span>
+    <button mat-icon-button [disabled]="disabled()" (click)="stepMinuteDown()" aria-label="Decrement minute">
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+  </div>
+
   @if (showSeconds()) {
-    <span>:</span>
-    <span class="sd-time-spinner__second">{{ second() | number:'2.0-0' }}</span>
+    <span class="sd-time-spinner__sep">:</span>
+    <!-- second -->
+    <div class="sd-time-spinner__col">
+      <button mat-icon-button [disabled]="disabled()" (click)="stepSecondUp()" aria-label="Increment second">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+      </button>
+      <span class="sd-time-spinner__digits">{{ second() | number:'2.0-0' }}</span>
+      <button mat-icon-button [disabled]="disabled()" (click)="stepSecondDown()" aria-label="Decrement second">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+    </div>
   }
 </div>
