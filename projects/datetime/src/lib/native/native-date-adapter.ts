@@ -4,6 +4,25 @@ import { SdDateAdapter } from '../core/date-adapter';
 
 @Injectable()
 export class SdNativeDateAdapter extends NativeDateAdapter implements SdDateAdapter<Date> {
+
+  // Nếu displayFormat là string chứa token thời gian (h/H/m/s), dùng Intl để render đầy đủ ngày+giờ
+  // Lý do: NativeDateAdapter.format() chỉ nhận Intl.DateTimeFormatOptions, không hiểu chuỗi pattern
+  public override format(date: Date, displayFormat: unknown): string {
+    if (typeof displayFormat === 'string' && /[hHms]/.test(displayFormat)) {
+      const opts: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        ...(/s/.test(displayFormat) ? { second: '2-digit' } : {}),
+        hour12: /a/i.test(displayFormat),
+      };
+      return new Intl.DateTimeFormat(this.locale, opts).format(date);
+    }
+    return super.format(date, displayFormat as Intl.DateTimeFormatOptions);
+  }
+
   public getHour(date: Date): number { return date.getHours(); }
   public getMinute(date: Date): number { return date.getMinutes(); }
   public getSecond(date: Date): number { return date.getSeconds(); }

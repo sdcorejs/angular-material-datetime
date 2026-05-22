@@ -81,4 +81,21 @@ describe('SdNativeDateAdapter', () => {
   it('createDatetime throws on invalid second (>59)', () => {
     expect(() => adapter.createDatetime(2026, 4, 22, 0, 0, 60)).toThrow();
   });
+
+  it('format() with time-aware string returns datetime', () => {
+    const d = new Date(2026, 4, 22, 14, 30, 0);
+    const out = adapter.format(d, 'M/d/yyyy h:mm a');
+    // Kết quả phụ thuộc locale, nhưng phải chứa phần giờ:phút
+    expect(out).toMatch(/\d+:\d+/);
+  });
+
+  it('format() with date-only Intl options delegates to super', () => {
+    // Khi displayFormat là object Intl.DateTimeFormatOptions (không phải string có token h/H/m/s)
+    // thì override gọi super.format() → trả về chỉ ngày, không có giờ:phút
+    const d = new Date(2026, 4, 22, 14, 30, 0);
+    const opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    const out = adapter.format(d, opts);
+    // Intl với date-only options → không chứa thời gian (không có dạng h:mm)
+    expect(out).not.toMatch(/\d+:\d+/);
+  });
 });

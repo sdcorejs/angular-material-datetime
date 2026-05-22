@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy, Component, OnDestroy, TemplateRef,
+  ChangeDetectionStrategy, Component, OnDestroy, TemplateRef, ViewEncapsulation,
   ViewContainerRef, computed, inject, input, output, signal, viewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -16,6 +16,7 @@ import { SdTimeSpinner } from '../time-spinner/time-spinner.component';
   templateUrl: './datetime-picker.component.html',
   styleUrls: ['./datetime-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   host: { class: 'sd-datetime-picker' },
 })
 export class SdDatetimePicker<D = Date> implements OnDestroy {

@@ -5,7 +5,7 @@
     <mat-label>Pick a datetime</mat-label>
     <input matInput [sdDatetimePicker]="picker" [formControl]="ctrl">
     <button matSuffix mat-icon-button [sdDatetimePickerToggle]="picker" aria-label="Open picker">
-      📅
+      <mat-icon>event</mat-icon>
     </button>
     <sd-datetime-picker #picker [showSeconds]="true">
       <sd-datetime-picker-actions>
