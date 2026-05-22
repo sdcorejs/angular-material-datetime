@@ -11,3 +11,20 @@ describe('public-api exports', () => {
     expect(publicApi.SD_DATETIME_DEFAULT_OPTIONS).toBeDefined();
   });
 });
+
+describe('public-api — datetime-picker exports', () => {
+  for (const name of [
+    'SdTimeSpinner',
+    'SdDatetimePicker',
+    'SdDatetimePickerInput',
+    'SdDatetimePickerToggle',
+    'SdDatetimePickerActions',
+    'SdDatetimePickerApply',
+    'SdDatetimePickerCancel',
+    'SdDatetimePickerClear',
+  ] as const) {
+    it(`exports ${name}`, () => {
+      expect((publicApi as Record<string, unknown>)[name]).toBeDefined();
+    });
+  }
+});
