@@ -209,3 +209,41 @@ describe('SdTimeSpinner keydown digit-only filter', () => {
     }
   });
 });
+
+describe('SdTimeSpinner display padding (focused vs unfocused)', () => {
+  let fixture: ComponentFixture<SdTimeSpinner>;
+  let component: SdTimeSpinner;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    fixture = TestBed.createComponent(SdTimeSpinner);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 5, 30, 0));
+    fixture.detectChanges();
+  });
+
+  it('displayHour pads to 2 digits when not focused', () => {
+    expect(component.displayHour()).toBe('05');
+  });
+
+  it('displayHour is unpadded while hour is focused (so incremental typing works)', () => {
+    component.setFocus('hour');
+    expect(component.displayHour()).toBe('5');
+  });
+
+  it('displayMinute pads to 2 digits when minute is not focused', () => {
+    expect(component.displayMinute()).toBe('30');
+  });
+
+  it('clearFocus restores padding', () => {
+    component.setFocus('hour');
+    expect(component.displayHour()).toBe('5');
+    component.clearFocus();
+    expect(component.displayHour()).toBe('05');
+  });
+
+  it('focusing hour does not unpad minute', () => {
+    component.setFocus('hour');
+    expect(component.displayMinute()).toBe('30');
+  });
+});

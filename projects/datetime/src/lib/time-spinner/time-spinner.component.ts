@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +23,22 @@ export class SdTimeSpinner {
   public readonly hour = computed(() => this.value()?.getHours() ?? 0);
   public readonly minute = computed(() => this.value()?.getMinutes() ?? 0);
   public readonly second = computed(() => this.value()?.getSeconds() ?? 0);
+
+  private readonly _focusedUnit = signal<'hour' | 'minute' | 'second' | null>(null);
+
+  /** Display string for each column: unpadded while focused (so the user can type freely), padded to 2 digits otherwise. */
+  public readonly displayHour = computed(() =>
+    this._focusedUnit() === 'hour' ? String(this.hour()) : String(this.hour()).padStart(2, '0'),
+  );
+  public readonly displayMinute = computed(() =>
+    this._focusedUnit() === 'minute' ? String(this.minute()) : String(this.minute()).padStart(2, '0'),
+  );
+  public readonly displaySecond = computed(() =>
+    this._focusedUnit() === 'second' ? String(this.second()) : String(this.second()).padStart(2, '0'),
+  );
+
+  public setFocus(unit: 'hour' | 'minute' | 'second'): void { this._focusedUnit.set(unit); }
+  public clearFocus(): void { this._focusedUnit.set(null); }
 
   public stepHourUp(): void { this.#step('hour', +1); }
   public stepHourDown(): void { this.#step('hour', -1); }
