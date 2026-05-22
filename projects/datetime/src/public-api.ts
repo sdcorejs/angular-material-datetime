@@ -1,3 +1,4 @@
 // Public API surface of @sdcorejs/angular-material-datetime
-// Exports are added by subsequent tasks as components/directives are implemented.
-export {};
+export * from './lib/core/date-adapter';
+export * from './lib/core/date-formats';
+export * from './lib/core/default-options';
