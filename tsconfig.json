@@ -3,7 +3,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "paths": {
+      "@sdcorejs/angular-material-datetime": [
+        "projects/datetime/src/public-api.ts"
+      ],
       "date-fns-adapter": [
         "./dist/date-fns-adapter"
       ],
