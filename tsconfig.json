@@ -4,8 +4,14 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
+      "date-fns-adapter": [
+        "./dist/date-fns-adapter"
+      ],
       "datetime": [
         "./dist/datetime"
+      ],
+      "moment-adapter": [
+        "./dist/moment-adapter"
       ]
     },
     "outDir": "./dist/out-tsc",

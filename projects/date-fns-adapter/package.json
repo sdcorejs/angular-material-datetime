@@ -1,0 +1,17 @@
+{
+  "name": "@sdcorejs/angular-material-datetime-date-fns",
+  "version": "0.1.0",
+  "description": "date-fns date adapter for @sdcorejs/angular-material-datetime",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdcorejs/angular-material-datetime.git",
+    "directory": "projects/date-fns-adapter"
+  },
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/core": ">=19.0.0 <22.0.0",
+    "@sdcorejs/angular-material-datetime": "^0.1.0",
+    "date-fns": ">=3.0.0"
+  }
+}

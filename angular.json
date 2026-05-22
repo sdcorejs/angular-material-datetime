@@ -38,6 +38,72 @@
           }
         }
       }
+    },
+    "moment-adapter": {
+      "projectType": "library",
+      "root": "projects/moment-adapter",
+      "sourceRoot": "projects/moment-adapter/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/moment-adapter/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/moment-adapter/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/moment-adapter/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/moment-adapter/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "date-fns-adapter": {
+      "projectType": "library",
+      "root": "projects/date-fns-adapter",
+      "sourceRoot": "projects/date-fns-adapter/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/date-fns-adapter/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/date-fns-adapter/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/date-fns-adapter/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/date-fns-adapter/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
     }
   }
 }
