@@ -11,7 +11,9 @@
     "start": "ng serve demo",
     "changeset": "changeset",
     "changeset:version": "changeset version",
-    "changeset:publish": "npm run build:all && changeset publish"
+    "changeset:publish": "npm run build:all && changeset publish",
+    "version": "changeset version",
+    "release": "npm run build:all && changeset publish"
   },
   "private": true,
   "workspaces": [
