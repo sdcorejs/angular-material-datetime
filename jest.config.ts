@@ -13,6 +13,10 @@ const config: Config = {
   ],
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['text', 'lcov', 'html'],
+  coverageThreshold: {
+    global: { branches: 80, functions: 80, lines: 80, statements: 80 },
+    './projects/datetime/src/lib/native/': { branches: 95, functions: 95, lines: 95, statements: 95 },
+  },
   transform: {
     '^.+\\.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',
