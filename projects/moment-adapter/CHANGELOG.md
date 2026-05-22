@@ -1,5 +1,11 @@
 # @sdcorejs/angular-material-datetime-moment
 
+## 1.0.1
+
+### Patch Changes
+
+- Improve npm README documentation and clarify that the Moment adapter package is a placeholder in the 1.0.x line.
+
 ## 1.0.0
 
 ### Major Changes

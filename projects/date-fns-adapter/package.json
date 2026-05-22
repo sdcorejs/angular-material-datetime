@@ -1,6 +1,6 @@
 {
   "name": "@sdcorejs/angular-material-datetime-date-fns",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "date-fns date adapter for @sdcorejs/angular-material-datetime",
   "license": "MIT",
   "repository": {

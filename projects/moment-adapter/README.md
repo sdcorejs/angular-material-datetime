@@ -1,63 +1,43 @@
-# MomentAdapter
+# @sdcorejs/angular-material-datetime-moment
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+Moment.js adapter package for `@sdcorejs/angular-material-datetime`.
 
-## Code scaffolding
+## Current Status
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+This package is published for version alignment with the main datetime package, but the Moment adapter implementation is not included in the `1.0.x` line yet. Its public API is intentionally empty in this release.
 
-```bash
-ng generate component component-name
+Use the native adapter from `@sdcorejs/angular-material-datetime` today:
+
+```ts
+import { provideSdNativeDateAdapter } from '@sdcorejs/angular-material-datetime';
+
+export const appConfig = {
+  providers: [
+    provideSdNativeDateAdapter(),
+  ],
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Install
 
 ```bash
-ng generate --help
+npm install @sdcorejs/angular-material-datetime @sdcorejs/angular-material-datetime-moment moment
 ```
 
-## Building
+Installing this package is only useful if you want to pin the future adapter package name now. For production use in `1.0.x`, configure the native adapter instead.
 
-To build the library, run:
+## Peer Dependencies
 
-```bash
-ng build moment-adapter
-```
+| Dependency | Supported range |
+| --- | --- |
+| `@angular/core` | `>=19.0.0 <22.0.0` |
+| `@sdcorejs/angular-material-datetime` | `^1.0.0` |
+| `moment` | `^2.29.0` |
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+## Roadmap
 
-### Publishing the Library
+The package is reserved for a Moment-backed implementation of `SdDateAdapter<D>`. Until that lands, do not import runtime symbols from this package.
 
-Once the project is built, you can publish your library by following these steps:
+## License
 
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/moment-adapter
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT

@@ -1,5 +1,11 @@
 # @sdcorejs/angular-material-datetime
 
+## 1.0.1
+
+### Patch Changes
+
+- Improve npm README documentation with installation, usage, API, compatibility, and release guidance.
+
 ## 1.0.0
 
 ### Major Changes

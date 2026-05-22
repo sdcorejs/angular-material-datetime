@@ -1,6 +1,6 @@
 {
   "name": "@sdcorejs/angular-material-datetime-moment",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Moment.js date adapter for @sdcorejs/angular-material-datetime",
   "license": "MIT",
   "repository": {

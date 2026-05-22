@@ -1,63 +1,161 @@
-# Datetime
+# @sdcorejs/angular-material-datetime
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+Standalone datetime picker components for Angular Material.
 
-## Code scaffolding
+This is the main package. It contains the working picker UI, input and toggle directives, action directives, `sd-time-spinner`, the shared adapter contract, and the native JavaScript `Date` adapter.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Install
 
 ```bash
-ng generate --help
+npm install @sdcorejs/angular-material-datetime @angular/material @angular/cdk
 ```
 
-## Building
+## Configure
 
-To build the library, run:
+Register the native adapter once in `app.config.ts`:
 
-```bash
-ng build datetime
+```ts
+import { ApplicationConfig } from '@angular/core';
+import { provideSdNativeDateAdapter } from '@sdcorejs/angular-material-datetime';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideSdNativeDateAdapter(),
+  ],
+};
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+## Basic Usage
 
-### Publishing the Library
+```ts
+import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {
+  SdDatetimePicker,
+  SdDatetimePickerInput,
+  SdDatetimePickerToggle,
+} from '@sdcorejs/angular-material-datetime';
 
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/datetime
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+@Component({
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    SdDatetimePicker,
+    SdDatetimePickerInput,
+    SdDatetimePickerToggle,
+  ],
+  template: `
+    <mat-form-field>
+      <mat-label>Start time</mat-label>
+      <input matInput [sdDatetimePicker]="picker" [formControl]="startAt">
+      <button mat-button matSuffix type="button" [sdDatetimePickerToggle]="picker">
+        Open
+      </button>
+      <sd-datetime-picker #picker></sd-datetime-picker>
+    </mat-form-field>
+  `,
+})
+export class ExampleComponent {
+  readonly startAt = new FormControl<Date | null>(null);
+}
 ```
 
-## Running end-to-end tests
+## Picker API
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+```html
+<sd-datetime-picker
+  #picker
+  [showSeconds]="true"
+  [stepMinute]="5"
+  [disabled]="false"
+  [minDate]="minDate"
+  [maxDate]="maxDate"
+  [startAt]="initialDate"
+  (applied)="save($event)"
+  (closed)="onClosed()">
+</sd-datetime-picker>
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+| Input | Type | Default | Description |
+| --- | --- | --- | --- |
+| `showSeconds` | `boolean` | `false` | Shows the seconds column. |
+| `stepMinute` | `number` | `1` | Minute increment/decrement step. |
+| `disabled` | `boolean` | `false` | Prevents opening the picker. |
+| `minDate` | `D \| null` | `null` | Minimum selectable datetime. |
+| `maxDate` | `D \| null` | `null` | Maximum selectable datetime. |
+| `startAt` | `D \| null` | `null` | Initial calendar date/month. |
 
-## Additional Resources
+| Output | Payload | Description |
+| --- | --- | --- |
+| `applied` | `D` | Fires when Apply is clicked. |
+| `cleared` | `void` | Fires when the picker is cleared. |
+| `closed` | `void` | Fires after the overlay closes. |
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Custom Actions
+
+By default, the picker renders Now, Cancel, and Apply. Project your own action row to replace those buttons:
+
+```html
+<sd-datetime-picker #picker>
+  <sd-datetime-picker-actions>
+    <button mat-button type="button" sdDatetimePickerNow>Now</button>
+    <button mat-button type="button" sdDatetimePickerCancel>Cancel</button>
+    <button mat-flat-button type="button" sdDatetimePickerApply>Apply</button>
+  </sd-datetime-picker-actions>
+</sd-datetime-picker>
+```
+
+```ts
+import {
+  SdDatetimePickerActions,
+  SdDatetimePickerApply,
+  SdDatetimePickerCancel,
+  SdDatetimePickerNow,
+} from '@sdcorejs/angular-material-datetime';
+```
+
+## Time Spinner
+
+`sd-time-spinner` can also be used directly:
+
+```html
+<sd-time-spinner
+  [value]="value"
+  [showSeconds]="true"
+  [stepMinute]="15"
+  (valueChange)="value = $event">
+</sd-time-spinner>
+```
+
+## Adapter Contract
+
+The package ships with `SdNativeDateAdapter` and `provideSdNativeDateAdapter()` for JavaScript `Date`.
+
+Custom adapters can extend `SdDateAdapter<D>` when an application needs another date type. The adapter must implement hour, minute, second, and datetime creation helpers on top of Angular Material's `DateAdapter<D>`.
+
+## Peer Dependencies
+
+| Dependency | Supported range |
+| --- | --- |
+| `@angular/core` | `>=19.0.0 <22.0.0` |
+| `@angular/common` | `>=19.0.0 <22.0.0` |
+| `@angular/material` | `>=19.0.0 <22.0.0` |
+| `@angular/cdk` | `>=19.0.0 <22.0.0` |
+| `rxjs` | `^7.0.0` |
+
+## Related Packages
+
+- `@sdcorejs/angular-material-datetime-moment`
+- `@sdcorejs/angular-material-datetime-date-fns`
+
+The related adapter packages are version-aligned with this package.
+
+## License
+
+MIT
