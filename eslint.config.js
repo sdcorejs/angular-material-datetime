@@ -55,10 +55,11 @@ module.exports = tsEslint.config(
         { suffixes: ['Component', 'Spinner', 'Picker', 'Panel', 'Dialog', 'Header', 'Footer', 'Actions'] },
       ],
       // Allow directive class names without "Directive" suffix, following
-      // Angular Material convention (e.g. MatSort, MatRipple, SdDatetimePickerApply)
+      // Angular Material convention (e.g. MatSort, MatRipple, SdDatetimePickerApply,
+      // SdDatetimePickerInput mirrors MatDatepickerInput)
       '@angular-eslint/directive-class-suffix': [
         'error',
-        { suffixes: ['Directive', 'Apply', 'Cancel', 'Clear', 'Toggle'] },
+        { suffixes: ['Directive', 'Apply', 'Cancel', 'Clear', 'Toggle', 'Input'] },
       ],
     },
   },
