@@ -39,3 +39,32 @@
 .sd-datetime-picker__panel sd-time-spinner {
   border-top: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.08));
 }
+
+// Default action row — rendered when consumer does NOT project <sd-datetime-picker-actions>
+.sd-datetime-picker__default-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px 12px 12px;
+  border-top: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.08));
+
+  .sd-datetime-picker__default-now { margin-right: auto; }
+
+  button.mat-mdc-button,
+  button.mat-mdc-unelevated-button,
+  button.mat-mdc-raised-button {
+    height: 32px;
+    min-height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .sd-datetime-picker__default-now .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+}

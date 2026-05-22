@@ -196,6 +196,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             </tbody>
           </table>
         </div>
+
+        <!-- Default actions note -->
+        <h3 class="sub-title">Default Actions</h3>
+        <p class="section-desc" style="margin-top: 0;">
+          If you don't project a <code>&lt;sd-datetime-picker-actions&gt;</code> element, the picker renders a built-in row
+          with <strong>Now</strong> (left, with clock icon), <strong>Cancel</strong>, and <strong>Apply</strong> (right).
+          Project your own block to fully override — <code>SdDatetimePickerActions</code>, <code>SdDatetimePickerApply</code>,
+          <code>SdDatetimePickerCancel</code>, and <code>SdDatetimePickerNow</code> are only needed when projecting custom content.
+        </p>
       </div>
     </section>
   `,

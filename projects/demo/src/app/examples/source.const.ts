@@ -4,22 +4,12 @@ export const BASIC_TPL = `<mat-form-field appearance="outline">
   <button matSuffix mat-icon-button [sdDatetimePickerToggle]="picker">
     <mat-icon>event</mat-icon>
   </button>
-  <sd-datetime-picker #picker>
-    <sd-datetime-picker-actions>
-      <button mat-button sdDatetimePickerNow>
-        <mat-icon>schedule</mat-icon> Now
-      </button>
-      <button mat-button sdDatetimePickerCancel>Cancel</button>
-      <button mat-flat-button sdDatetimePickerApply>Apply</button>
-    </sd-datetime-picker-actions>
-  </sd-datetime-picker>
+  <sd-datetime-picker #picker></sd-datetime-picker>
 </mat-form-field>`;
 
 export const BASIC_TS = `import { FormControl } from '@angular/forms';
 import {
   SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle,
-  SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
-  SdDatetimePickerNow,
 } from '@sdcorejs/angular-material-datetime';
 
 @Component({ /* ... */ })
@@ -243,4 +233,38 @@ export class ValidationExample {
       console.log('Submitted:', this.form.value);
     }
   }
+}`;
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const CUSTOM_ACTIONS_TPL = `<mat-form-field appearance="outline">
+  <mat-label>Chọn ngày giờ</mat-label>
+  <input matInput [sdDatetimePicker]="picker" [formControl]="ctrl">
+  <button matSuffix mat-icon-button [sdDatetimePickerToggle]="picker">
+    <mat-icon>event</mat-icon>
+  </button>
+  <sd-datetime-picker #picker>
+    <sd-datetime-picker-actions>
+      <button mat-button sdDatetimePickerNow>
+        <mat-icon>schedule</mat-icon> Bây giờ
+      </button>
+      <button mat-button sdDatetimePickerCancel>Hủy</button>
+      <button mat-flat-button sdDatetimePickerApply>Xác nhận</button>
+    </sd-datetime-picker-actions>
+  </sd-datetime-picker>
+</mat-form-field>`;
+
+export const CUSTOM_ACTIONS_TS = `import { FormControl } from '@angular/forms';
+import {
+  SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle,
+  SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
+  SdDatetimePickerNow,
+} from '@sdcorejs/angular-material-datetime';
+
+@Component({ /* ... */ })
+export class CustomActionsExample {
+  ctrl = new FormControl<Date | null>(null);
+  // Project <sd-datetime-picker-actions> to fully override the default buttons.
+  // SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
+  // and SdDatetimePickerNow are only needed when projecting custom content.
 }`;

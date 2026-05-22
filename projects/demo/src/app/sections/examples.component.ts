@@ -19,6 +19,7 @@ import {
 import { CodeBlockComponent } from '../code-block.component';
 import {
   BASIC_TPL, BASIC_TS,
+  CUSTOM_ACTIONS_TPL, CUSTOM_ACTIONS_TS,
   DISABLED_TPL, DISABLED_TS,
   INITIAL_TPL, INITIAL_TS,
   MINMAX_TPL, MINMAX_TS,
@@ -61,7 +62,7 @@ import {
           <mat-card class="example-card">
             <mat-card-header>
               <mat-card-title>1. Basic</mat-card-title>
-              <mat-card-subtitle>Minimal datetime picker with Apply/Cancel + Now button</mat-card-subtitle>
+              <mat-card-subtitle>Minimal datetime picker — default Now / Cancel / Apply actions</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
               <div class="example-live">
@@ -71,15 +72,7 @@ import {
                   <button matSuffix mat-icon-button [sdDatetimePickerToggle]="picker1">
                     <mat-icon>event</mat-icon>
                   </button>
-                  <sd-datetime-picker #picker1>
-                    <sd-datetime-picker-actions>
-                      <button mat-button sdDatetimePickerNow>
-                        <mat-icon>schedule</mat-icon> Now
-                      </button>
-                      <button mat-button sdDatetimePickerCancel>Cancel</button>
-                      <button mat-flat-button sdDatetimePickerApply>Apply</button>
-                    </sd-datetime-picker-actions>
-                  </sd-datetime-picker>
+                  <sd-datetime-picker #picker1></sd-datetime-picker>
                 </mat-form-field>
                 <p class="value-display">Value: <code>{{ basic.value | date:'medium' }}</code></p>
               </div>
@@ -359,6 +352,42 @@ import {
             </mat-card-content>
           </mat-card>
 
+          <!-- 9. Custom actions -->
+          <mat-card class="example-card">
+            <mat-card-header>
+              <mat-card-title>9. Custom Actions</mat-card-title>
+              <mat-card-subtitle>Override the default Now/Cancel/Apply by projecting your own &lt;sd-datetime-picker-actions&gt; block</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="example-live">
+                <mat-form-field appearance="outline" class="example-field">
+                  <mat-label>Chọn ngày giờ</mat-label>
+                  <input matInput [sdDatetimePicker]="picker9" [formControl]="customActions">
+                  <button matSuffix mat-icon-button [sdDatetimePickerToggle]="picker9">
+                    <mat-icon>event</mat-icon>
+                  </button>
+                  <sd-datetime-picker #picker9>
+                    <sd-datetime-picker-actions>
+                      <button mat-button sdDatetimePickerNow>
+                        <mat-icon>schedule</mat-icon> Bây giờ
+                      </button>
+                      <button mat-button sdDatetimePickerCancel>Hủy</button>
+                      <button mat-flat-button sdDatetimePickerApply>Xác nhận</button>
+                    </sd-datetime-picker-actions>
+                  </sd-datetime-picker>
+                </mat-form-field>
+                <p class="value-display">Value: <code>{{ customActions.value | date:'medium' }}</code></p>
+              </div>
+              <mat-expansion-panel class="example-code-panel">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>Show code</mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-code [source]="customActionsTpl" lang="html"></app-code>
+                <app-code [source]="customActionsTs" lang="typescript"></app-code>
+              </mat-expansion-panel>
+            </mat-card-content>
+          </mat-card>
+
         </div>
       </div>
     </section>
@@ -538,4 +567,9 @@ export class ExamplesComponent {
     this.validationForm.markAllAsTouched();
     this.validationSubmitted = true;
   }
+
+  // Example 9: Custom actions
+  readonly customActions = new FormControl<Date | null>(null);
+  readonly customActionsTpl = CUSTOM_ACTIONS_TPL;
+  readonly customActionsTs = CUSTOM_ACTIONS_TS;
 }

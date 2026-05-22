@@ -6,13 +6,15 @@ import { CommonModule } from '@angular/common';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { MatCalendar } from '@angular/material/datepicker';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { SdDateAdapter } from '../core/date-adapter';
 import { SdTimeSpinner } from '../time-spinner/time-spinner.component';
 
 @Component({
   selector: 'sd-datetime-picker',
   standalone: true,
-  imports: [CommonModule, MatCalendar, SdTimeSpinner],
+  imports: [CommonModule, MatCalendar, SdTimeSpinner, MatButtonModule, MatIconModule],
   templateUrl: './datetime-picker.component.html',
   styleUrls: ['./datetime-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -38,29 +38,19 @@ export const appConfig: ApplicationConfig = {
 // my.component.ts
 import {
   SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle,
-  SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
-  SdDatetimePickerClear, SdDatetimePickerNow,
 } from '@sdcorejs/angular-material-datetime';
 
 @Component({
   imports: [
     ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatButtonModule,
     SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle,
-    SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
-    SdDatetimePickerClear, SdDatetimePickerNow,
   ],
   template: `
+    <!-- Minimal: defaults (Now / Cancel / Apply) render automatically -->
     <mat-form-field>
       <input matInput [sdDatetimePicker]="picker" [formControl]="ctrl">
       <button matSuffix [sdDatetimePickerToggle]="picker">Open</button>
-      <sd-datetime-picker #picker [showSeconds]="true">
-        <sd-datetime-picker-actions>
-          <button sdDatetimePickerNow>Now</button>
-          <button sdDatetimePickerClear>Clear</button>
-          <button sdDatetimePickerCancel>Cancel</button>
-          <button sdDatetimePickerApply>Apply</button>
-        </sd-datetime-picker-actions>
-      </sd-datetime-picker>
+      <sd-datetime-picker #picker [showSeconds]="true"></sd-datetime-picker>
     </mat-form-field>
   `,
 })
@@ -68,6 +58,22 @@ export class MyComponent {
   ctrl = new FormControl<Date | null>(null);
 }
 ```
+
+### Customizing actions
+
+Project your own `<sd-datetime-picker-actions>` block to override the defaults — for example, Vietnamese labels:
+
+```html
+<sd-datetime-picker #picker>
+  <sd-datetime-picker-actions>
+    <button mat-button sdDatetimePickerNow>Bây giờ</button>
+    <button mat-button sdDatetimePickerCancel>Hủy</button>
+    <button mat-flat-button sdDatetimePickerApply>Xác nhận</button>
+  </sd-datetime-picker-actions>
+</sd-datetime-picker>
+```
+
+The component imports in your `@Component` decorator can drop `SdDatetimePickerActions`, `SdDatetimePickerNow`, `SdDatetimePickerCancel`, and `SdDatetimePickerApply` if you're using the defaults — they're only needed when projecting custom content.
 
 ## Compatibility
 
