@@ -59,7 +59,7 @@ module.exports = tsEslint.config(
       // SdDatetimePickerInput mirrors MatDatepickerInput)
       '@angular-eslint/directive-class-suffix': [
         'error',
-        { suffixes: ['Directive', 'Apply', 'Cancel', 'Clear', 'Now', 'Toggle', 'Input'] },
+        { suffixes: ['Directive', 'Apply', 'Cancel', 'Now', 'Toggle', 'Input'] },
       ],
     },
   },

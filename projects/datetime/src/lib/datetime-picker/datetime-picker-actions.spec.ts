@@ -6,16 +6,14 @@ import { SdDatetimePicker } from './datetime-picker.component';
 import { SdDatetimePickerActions } from './datetime-picker-actions.component';
 import { SdDatetimePickerApply } from './datetime-picker-apply.directive';
 import { SdDatetimePickerCancel } from './datetime-picker-cancel.directive';
-import { SdDatetimePickerClear } from './datetime-picker-clear.directive';
 import { SdDatetimePickerNow } from './datetime-picker-now.directive';
 
 @Component({
   standalone: true,
-  imports: [SdDatetimePicker, SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel, SdDatetimePickerClear],
+  imports: [SdDatetimePicker, SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel],
   template: `
     <sd-datetime-picker #p>
       <sd-datetime-picker-actions>
-        <button sdDatetimePickerClear>Clear</button>
         <button sdDatetimePickerCancel>Cancel</button>
         <button sdDatetimePickerApply>Apply</button>
       </sd-datetime-picker-actions>
@@ -61,21 +59,6 @@ describe('SdDatetimePickerActions', () => {
     expect(appliedSpy).not.toHaveBeenCalled();
   });
 
-  it('Clear directive clears selection and closes', () => {
-    const fix = TestBed.createComponent(HostCmp);
-    fix.detectChanges();
-    const picker = fix.debugElement.query(By.directive(SdDatetimePicker)).componentInstance as SdDatetimePicker<Date>;
-    picker.select(new Date(2026, 4, 22, 10, 0, 0));
-    picker.open();
-    fix.detectChanges();
-    const clearedSpy = jest.fn();
-    picker.cleared.subscribe(clearedSpy);
-    const btn = fix.debugElement.query(By.css('[sdDatetimePickerClear]')).nativeElement as HTMLElement;
-    btn.click();
-    expect(picker.selected()).toBe(null);
-    expect(clearedSpy).toHaveBeenCalled();
-    expect(picker.opened()).toBe(false);
-  });
 });
 
 describe('SdDatetimePickerNow', () => {

@@ -21,7 +21,6 @@ describe('public-api — datetime-picker exports', () => {
     'SdDatetimePickerActions',
     'SdDatetimePickerApply',
     'SdDatetimePickerCancel',
-    'SdDatetimePickerClear',
     'SdDatetimePickerNow',
   ] as const) {
     it(`exports ${name}`, () => {
