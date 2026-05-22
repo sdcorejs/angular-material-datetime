@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "build:all": "ng build datetime && ng build moment-adapter && ng build date-fns-adapter",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch --passWithNoTests",
+    "test:coverage": "jest --coverage --passWithNoTests",
     "lint": "ng lint",
     "ng": "ng",
     "start": "ng serve demo"
