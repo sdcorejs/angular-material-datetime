@@ -16,3 +16,4 @@ export * from './lib/datetime-picker/datetime-picker-actions.component';
 export * from './lib/datetime-picker/datetime-picker-apply.directive';
 export * from './lib/datetime-picker/datetime-picker-cancel.directive';
 export * from './lib/datetime-picker/datetime-picker-clear.directive';
+export * from './lib/datetime-picker/datetime-picker-now.directive';

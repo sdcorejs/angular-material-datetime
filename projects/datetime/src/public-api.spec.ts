@@ -22,6 +22,7 @@ describe('public-api — datetime-picker exports', () => {
     'SdDatetimePickerApply',
     'SdDatetimePickerCancel',
     'SdDatetimePickerClear',
+    'SdDatetimePickerNow',
   ] as const) {
     it(`exports ${name}`, () => {
       expect((publicApi as Record<string, unknown>)[name]).toBeDefined();

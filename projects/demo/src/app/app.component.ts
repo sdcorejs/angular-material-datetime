@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import {
   SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle,
   SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
-  SdDatetimePickerClear,
+  SdDatetimePickerClear, SdDatetimePickerNow,
 } from '@sdcorejs/angular-material-datetime';
 
 @Component({
@@ -19,7 +19,7 @@ import {
     ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule,
     SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle,
     SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
-    SdDatetimePickerClear,
+    SdDatetimePickerClear, SdDatetimePickerNow,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

@@ -7,6 +7,7 @@ import { SdDatetimePickerActions } from './datetime-picker-actions.component';
 import { SdDatetimePickerApply } from './datetime-picker-apply.directive';
 import { SdDatetimePickerCancel } from './datetime-picker-cancel.directive';
 import { SdDatetimePickerClear } from './datetime-picker-clear.directive';
+import { SdDatetimePickerNow } from './datetime-picker-now.directive';
 
 @Component({
   standalone: true,
@@ -74,5 +75,49 @@ describe('SdDatetimePickerActions', () => {
     expect(picker.selected()).toBe(null);
     expect(clearedSpy).toHaveBeenCalled();
     expect(picker.opened()).toBe(false);
+  });
+});
+
+describe('SdDatetimePickerNow', () => {
+  it('Now directive sets selected to current Date (popup stays open)', () => {
+    @Component({
+      standalone: true,
+      imports: [SdDatetimePicker, SdDatetimePickerActions, SdDatetimePickerNow],
+      template: `
+        <sd-datetime-picker #p>
+          <sd-datetime-picker-actions>
+            <button sdDatetimePickerNow>Now</button>
+          </sd-datetime-picker-actions>
+        </sd-datetime-picker>
+      `,
+    })
+    class NowHostCmp {}
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [NowHostCmp],
+      providers: [provideSdNativeDateAdapter()],
+    });
+
+    const fix = TestBed.createComponent(NowHostCmp);
+    fix.detectChanges();
+    const picker = fix.debugElement.query(By.directive(SdDatetimePicker)).componentInstance as SdDatetimePicker<Date>;
+
+    picker.open();
+    fix.detectChanges();
+
+    expect(picker.selected()).toBeNull();
+    const before = Date.now();
+    const btn = fix.debugElement.query(By.css('[sdDatetimePickerNow]')).nativeElement as HTMLElement;
+    btn.click();
+    const after = Date.now();
+
+    const sel = picker.selected();
+    expect(sel).toBeInstanceOf(Date);
+    expect(sel!.getTime()).toBeGreaterThanOrEqual(before);
+    expect(sel!.getTime()).toBeLessThanOrEqual(after);
+
+    // Popup stays open after clicking Now
+    expect(picker.opened()).toBe(true);
   });
 });

@@ -96,5 +96,9 @@ export class SdDatetimePicker<D = Date> implements OnDestroy {
     this.close();
   }
 
+  public now(): void {
+    this._selected.set(new Date() as D);
+  }
+
   public ngOnDestroy(): void { this.overlayRef?.dispose(); }
 }
