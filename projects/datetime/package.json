@@ -1,0 +1,27 @@
+{
+  "name": "@sdcorejs/angular-material-datetime",
+  "version": "1.0.0",
+  "description": "Datetime, timepicker, and date-range picker for Angular Material — adapter-pluggable",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdcorejs/angular-material-datetime.git",
+    "directory": "projects/datetime"
+  },
+  "keywords": [
+    "angular",
+    "material",
+    "datetime",
+    "datepicker",
+    "timepicker",
+    "date-range"
+  ],
+  "sideEffects": false,
+  "peerDependencies": {
+    "@angular/cdk": ">=19.0.0 <22.0.0",
+    "@angular/common": ">=19.0.0 <22.0.0",
+    "@angular/core": ">=19.0.0 <22.0.0",
+    "@angular/material": ">=19.0.0 <22.0.0",
+    "rxjs": "^7.0.0"
+  }
+}

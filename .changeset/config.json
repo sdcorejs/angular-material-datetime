@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "sdcorejs/angular-material-datetime" }
+  ],
+  "commit": false,
+  "fixed": [],
+  "linked": [
+    [
+      "@sdcorejs/angular-material-datetime",
+      "@sdcorejs/angular-material-datetime-moment",
+      "@sdcorejs/angular-material-datetime-date-fns"
+    ]
+  ],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}
