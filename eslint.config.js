@@ -58,7 +58,7 @@ module.exports = tsEslint.config(
       // Angular Material convention (e.g. MatSort, MatRipple, SdDatetimePickerApply)
       '@angular-eslint/directive-class-suffix': [
         'error',
-        { suffixes: ['Directive', 'Apply', 'Cancel', 'Clear'] },
+        { suffixes: ['Directive', 'Apply', 'Cancel', 'Clear', 'Toggle'] },
       ],
     },
   },
