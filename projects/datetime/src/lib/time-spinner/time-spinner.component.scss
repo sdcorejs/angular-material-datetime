@@ -1,8 +1,4 @@
 :host {
-  display: block;
-}
-
-.sd-time-spinner {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,6 +10,7 @@
 .sd-time-spinner__columns {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
 }
 

@@ -140,18 +140,21 @@ describe('SdTimeSpinner typing into a column', () => {
     expect(spy.mock.calls[0][0].getHours()).toBe(22);
   });
 
-  it('onHourInput rejects invalid hour (>23) — does not emit', () => {
+  it('onHourInput clamps out-of-range hour (25 → 23) and emits', () => {
     const spy = jest.fn();
     component.valueChange.subscribe(spy);
     component.onHourInput('25');
-    expect(spy).not.toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][0].getHours()).toBe(23);
   });
 
-  it('onMinuteInput rejects negative values', () => {
+  it('onMinuteInput strips non-digits ("-1" → "1" → emits minute=1)', () => {
     const spy = jest.fn();
     component.valueChange.subscribe(spy);
     component.onMinuteInput('-1');
-    expect(spy).not.toHaveBeenCalled();
+    // '-' is stripped by /\D/g, leaving '1' → valid minute → emit
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][0].getMinutes()).toBe(1);
   });
 
   it('onSecondInput accepts 0..59', () => {
@@ -160,5 +163,49 @@ describe('SdTimeSpinner typing into a column', () => {
     component.valueChange.subscribe(spy);
     component.onSecondInput('45');
     expect(spy.mock.calls[0][0].getSeconds()).toBe(45);
+  });
+});
+
+describe('SdTimeSpinner keydown digit-only filter', () => {
+  let fixture: ComponentFixture<SdTimeSpinner>;
+  let component: SdTimeSpinner;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    fixture = TestBed.createComponent(SdTimeSpinner);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('onDigitKeyDown does not preventDefault for digit keys', () => {
+    const ev = new KeyboardEvent('keydown', { key: '5' });
+    const spy = jest.spyOn(ev, 'preventDefault');
+    component.onDigitKeyDown(ev);
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('onDigitKeyDown preventDefault for non-digit alphabetic keys', () => {
+    const ev = new KeyboardEvent('keydown', { key: 'a' });
+    const spy = jest.spyOn(ev, 'preventDefault');
+    component.onDigitKeyDown(ev);
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('onDigitKeyDown allows Backspace and arrows', () => {
+    for (const key of ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight']) {
+      const ev = new KeyboardEvent('keydown', { key });
+      const spy = jest.spyOn(ev, 'preventDefault');
+      component.onDigitKeyDown(ev);
+      expect(spy).not.toHaveBeenCalled();
+    }
+  });
+
+  it('onDigitKeyDown allows Ctrl+A / Ctrl+C / Ctrl+V / Ctrl+X', () => {
+    for (const key of ['a', 'c', 'v', 'x']) {
+      const ev = new KeyboardEvent('keydown', { key, ctrlKey: true });
+      const spy = jest.spyOn(ev, 'preventDefault');
+      component.onDigitKeyDown(ev);
+      expect(spy).not.toHaveBeenCalled();
+    }
   });
 });

@@ -5,13 +5,15 @@
       <mat-icon>keyboard_arrow_up</mat-icon>
     </button>
     <input
-      type="number"
+      type="text"
+      inputmode="numeric"
+      maxlength="2"
       class="sd-time-spinner__digits"
       [value]="hour() | number:'2.0-0'"
       [disabled]="disabled()"
-      min="0" max="23"
+      (keydown)="onDigitKeyDown($event)"
       (input)="onHourInput($any($event.target).value)"
-      aria-label="Hour">
+      aria-label="Hour (0-23)">
     <button mat-icon-button [disabled]="disabled()" (click)="stepHourDown()" aria-label="Decrement hour">
       <mat-icon>keyboard_arrow_down</mat-icon>
     </button>
@@ -25,13 +27,15 @@
       <mat-icon>keyboard_arrow_up</mat-icon>
     </button>
     <input
-      type="number"
+      type="text"
+      inputmode="numeric"
+      maxlength="2"
       class="sd-time-spinner__digits"
       [value]="minute() | number:'2.0-0'"
       [disabled]="disabled()"
-      min="0" max="59"
+      (keydown)="onDigitKeyDown($event)"
       (input)="onMinuteInput($any($event.target).value)"
-      aria-label="Minute">
+      aria-label="Minute (0-59)">
     <button mat-icon-button [disabled]="disabled()" (click)="stepMinuteDown()" aria-label="Decrement minute">
       <mat-icon>keyboard_arrow_down</mat-icon>
     </button>
@@ -45,13 +49,15 @@
         <mat-icon>keyboard_arrow_up</mat-icon>
       </button>
       <input
-        type="number"
+        type="text"
+        inputmode="numeric"
+        maxlength="2"
         class="sd-time-spinner__digits"
         [value]="second() | number:'2.0-0'"
         [disabled]="disabled()"
-        min="0" max="59"
+        (keydown)="onDigitKeyDown($event)"
         (input)="onSecondInput($any($event.target).value)"
-        aria-label="Second">
+        aria-label="Second (0-59)">
       <button mat-icon-button [disabled]="disabled()" (click)="stepSecondDown()" aria-label="Decrement second">
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>

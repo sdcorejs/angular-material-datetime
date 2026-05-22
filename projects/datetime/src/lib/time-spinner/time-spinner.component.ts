@@ -51,16 +51,34 @@ export class SdTimeSpinner {
   public onMinuteInput(raw: string): void { this.#setUnit('minute', raw, 0, 59); }
   public onSecondInput(raw: string): void { this.#setUnit('second', raw, 0, 59); }
 
-  // ตรวจ range แล้ว emit เฉพาะเมื่อค่าอยู่ในช่วงที่ถูกต้อง
+  public onDigitKeyDown(event: KeyboardEvent): void {
+    // Allow control keys and modifier shortcuts (Ctrl/Cmd + A/C/V/X)
+    if ((event.ctrlKey || event.metaKey) && /^[acvx]$/i.test(event.key)) return;
+    const allowed = new Set([
+      'Backspace', 'Delete', 'Tab', 'Enter', 'Escape',
+      'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+      'Home', 'End',
+    ]);
+    if (allowed.has(event.key)) return;
+    // Block any non-digit
+    if (!/^\d$/.test(event.key)) event.preventDefault();
+  }
+
+  // Strip non-digits, clamp to [min, max] แล้ว emit เสมอ (ยกเว้น empty string)
   #setUnit(unit: 'hour' | 'minute' | 'second', raw: string, min: number, max: number): void {
     if (this.disabled()) return;
-    const v = Number.parseInt(raw, 10);
-    if (Number.isNaN(v) || v < min || v > max) return;
+    // Strip non-digits and parse
+    const cleaned = (raw ?? '').replace(/\D/g, '').slice(0, 2);
+    if (cleaned === '') return;
+    const v = Number.parseInt(cleaned, 10);
+    if (Number.isNaN(v)) return;
+    // Clamp to [min, max] (e.g. typing 25 for hour → 23; 99 for minute → 59)
+    const clamped = Math.min(Math.max(v, min), max);
     const base = this.value() ?? new Date(2026, 0, 1, 0, 0, 0);
     const next = new Date(base);
-    if (unit === 'hour') next.setHours(v);
-    if (unit === 'minute') next.setMinutes(v);
-    if (unit === 'second') next.setSeconds(v);
+    if (unit === 'hour') next.setHours(clamped);
+    if (unit === 'minute') next.setMinutes(clamped);
+    if (unit === 'second') next.setSeconds(clamped);
     this.valueChange.emit(next);
   }
 }
