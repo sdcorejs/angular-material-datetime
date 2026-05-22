@@ -1,6 +1,5 @@
-@if (opened()) {
+<ng-template #panel>
   <div class="sd-datetime-picker__panel" role="dialog" aria-label="Datetime picker">
-    <!-- calendar binds to native Date — adapter conversion happens when D !== Date in later iterations -->
     <mat-calendar
       [selected]="$any(selected())"
       [minDate]="$any(minDate())"
@@ -19,4 +18,4 @@
 
     <ng-content select="sd-datetime-picker-actions"></ng-content>
   </div>
-}
+</ng-template>
