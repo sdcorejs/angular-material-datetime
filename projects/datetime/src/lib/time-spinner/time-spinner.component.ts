@@ -46,4 +46,21 @@ export class SdTimeSpinner {
   #wrap(v: number, mod: number): number {
     return ((v % mod) + mod) % mod;
   }
+
+  public onHourInput(raw: string): void { this.#setUnit('hour', raw, 0, 23); }
+  public onMinuteInput(raw: string): void { this.#setUnit('minute', raw, 0, 59); }
+  public onSecondInput(raw: string): void { this.#setUnit('second', raw, 0, 59); }
+
+  // ตรวจ range แล้ว emit เฉพาะเมื่อค่าอยู่ในช่วงที่ถูกต้อง
+  #setUnit(unit: 'hour' | 'minute' | 'second', raw: string, min: number, max: number): void {
+    if (this.disabled()) return;
+    const v = Number.parseInt(raw, 10);
+    if (Number.isNaN(v) || v < min || v > max) return;
+    const base = this.value() ?? new Date(2026, 0, 1, 0, 0, 0);
+    const next = new Date(base);
+    if (unit === 'hour') next.setHours(v);
+    if (unit === 'minute') next.setMinutes(v);
+    if (unit === 'second') next.setSeconds(v);
+    this.valueChange.emit(next);
+  }
 }

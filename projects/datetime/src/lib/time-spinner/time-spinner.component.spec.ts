@@ -120,3 +120,45 @@ describe('SdTimeSpinner step buttons', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 });
+
+describe('SdTimeSpinner typing into a column', () => {
+  let fixture: ComponentFixture<SdTimeSpinner>;
+  let component: SdTimeSpinner;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    fixture = TestBed.createComponent(SdTimeSpinner);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 30, 0));
+    fixture.detectChanges();
+  });
+
+  it('onHourInput accepts a valid hour and emits', () => {
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onHourInput('22');
+    expect(spy.mock.calls[0][0].getHours()).toBe(22);
+  });
+
+  it('onHourInput rejects invalid hour (>23) — does not emit', () => {
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onHourInput('25');
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('onMinuteInput rejects negative values', () => {
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onMinuteInput('-1');
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('onSecondInput accepts 0..59', () => {
+    fixture.componentRef.setInput('showSeconds', true);
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onSecondInput('45');
+    expect(spy.mock.calls[0][0].getSeconds()).toBe(45);
+  });
+});
