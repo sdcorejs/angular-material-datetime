@@ -48,6 +48,12 @@ module.exports = tsEslint.config(
       ],
       // Allow empty exports in stub public-api.ts files
       '@typescript-eslint/no-empty-object-type': 'off',
+      // Follow Angular Material naming convention: class names need not end
+      // with "Component" — e.g. SdTimeSpinner, SdDatepicker are acceptable
+      '@angular-eslint/component-class-suffix': [
+        'error',
+        { suffixes: ['Component', 'Spinner', 'Picker', 'Panel', 'Dialog', 'Header', 'Footer'] },
+      ],
     },
   },
 

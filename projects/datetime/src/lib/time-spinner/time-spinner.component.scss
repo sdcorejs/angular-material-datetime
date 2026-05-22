@@ -1,0 +1,12 @@
+.sd-time-spinner {
+  display: inline-flex;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+
+  &__columns {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 24px;
+  }
+}
