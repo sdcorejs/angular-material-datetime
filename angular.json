@@ -10,8 +10,17 @@
       "projectType": "library",
       "root": "projects/datetime",
       "sourceRoot": "projects/datetime/src",
-      "prefix": "lib",
+      "prefix": "sd",
       "architect": {
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/datetime/**/*.ts",
+              "projects/datetime/**/*.html"
+            ]
+          }
+        },
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
@@ -39,8 +48,17 @@
       "projectType": "library",
       "root": "projects/moment-adapter",
       "sourceRoot": "projects/moment-adapter/src",
-      "prefix": "lib",
+      "prefix": "sd",
       "architect": {
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/moment-adapter/**/*.ts",
+              "projects/moment-adapter/**/*.html"
+            ]
+          }
+        },
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
@@ -68,8 +86,17 @@
       "projectType": "library",
       "root": "projects/date-fns-adapter",
       "sourceRoot": "projects/date-fns-adapter/src",
-      "prefix": "lib",
+      "prefix": "sd",
       "architect": {
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/date-fns-adapter/**/*.ts",
+              "projects/date-fns-adapter/**/*.html"
+            ]
+          }
+        },
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
@@ -126,6 +153,15 @@
       "sourceRoot": "projects/demo/src",
       "prefix": "app",
       "architect": {
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/demo/**/*.ts",
+              "projects/demo/**/*.html"
+            ]
+          }
+        },
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
