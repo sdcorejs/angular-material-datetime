@@ -1,29 +1,24 @@
-import { Component } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import {
-  SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle,
-  SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
-  SdDatetimePickerNow,
-} from '@sdcorejs/angular-material-datetime';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NavComponent } from './sections/nav.component';
+import { HeroComponent } from './sections/hero.component';
+import { ExamplesComponent } from './sections/examples.component';
+import { ApiReferenceComponent } from './sections/api-reference.component';
+import { ThemingComponent } from './sections/theming.component';
+import { FooterComponent } from './sections/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    DatePipe,
-    ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule,
-    SdDatetimePicker, SdDatetimePickerInput, SdDatetimePickerToggle,
-    SdDatetimePickerActions, SdDatetimePickerApply, SdDatetimePickerCancel,
-    SdDatetimePickerNow,
+    NavComponent,
+    HeroComponent,
+    ExamplesComponent,
+    ApiReferenceComponent,
+    ThemingComponent,
+    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  ctrl = new FormControl<Date | null>(new Date(2026, 4, 22, 14, 30, 0));
-}
+export class AppComponent {}
