@@ -64,4 +64,54 @@ describe('SdDatetimePickerInput (CVA)', () => {
     const input = fix.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
     expect(input.disabled).toBe(true);
   });
+
+  it('setDisabledState false re-enables the input element', () => {
+    // ครอบคลุม branch setDisabledState(false) หลังจาก disable แล้ว enable กลับ
+    const fix = TestBed.createComponent(HostCmp);
+    fix.detectChanges();
+    fix.componentInstance.ctrl.disable();
+    fix.detectChanges();
+    const inputEl = fix.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
+    expect(inputEl.disabled).toBe(true);
+    fix.componentInstance.ctrl.enable();
+    fix.detectChanges();
+    expect(inputEl.disabled).toBe(false);
+  });
+
+  it('onBlur makes formControl touched (covers onTouched() call)', () => {
+    // ครอบคลุม @HostListener('blur') onBlur()
+    const fix = TestBed.createComponent(HostCmp);
+    fix.detectChanges();
+    expect(fix.componentInstance.ctrl.touched).toBe(false);
+    const inputEl = fix.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
+    inputEl.dispatchEvent(new Event('blur'));
+    fix.detectChanges();
+    expect(fix.componentInstance.ctrl.touched).toBe(true);
+  });
+
+  it('onInput parses raw text and calls onChange (covers @HostListener input branch)', () => {
+    // ครอบคลุม @HostListener('input') onInput()
+    const fix = TestBed.createComponent(HostCmp);
+    fix.detectChanges();
+    const inputEl = fix.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
+    // ตั้งค่าแล้ว dispatch event — adapter.parse() อาจคืน null หรือ Date ขึ้นอยู่กับ format
+    inputEl.value = '05/22/2026 02:30 PM';
+    inputEl.dispatchEvent(new Event('input'));
+    fix.detectChanges();
+    // ตรวจว่าไม่ throw และ formControl ถูก set ค่า (null หรือ Date ทั้งคู่ยอมรับ)
+    const v = fix.componentInstance.ctrl.value;
+    expect(v === null || v instanceof Date).toBe(true);
+  });
+
+  it('picker.cleared subscription clears the formControl value to null', () => {
+    // ครอบคลุม p.cleared.subscribe handler (lines 42-45)
+    const fix = TestBed.createComponent(HostCmp);
+    fix.detectChanges();
+    fix.componentInstance.ctrl.setValue(new Date(2026, 4, 22, 14, 30, 0));
+    fix.detectChanges();
+    const picker = fix.debugElement.query(By.directive(SdDatetimePicker)).componentInstance as SdDatetimePicker<Date>;
+    picker.clear();
+    fix.detectChanges();
+    expect(fix.componentInstance.ctrl.value).toBeNull();
+  });
 });

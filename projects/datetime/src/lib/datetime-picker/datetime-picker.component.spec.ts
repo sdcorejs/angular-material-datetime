@@ -39,4 +39,20 @@ describe('SdDatetimePicker', () => {
     component.close();
     expect(component.opened()).toBe(false);
   });
+
+  it('open() is no-op when already opened (covers disabled || opened branch)', () => {
+    // เปิดครั้งแรก ผ่าน → เปิดครั้งที่สองต้อง return ทันที
+    component.open();
+    expect(component.opened()).toBe(true);
+    // เรียก open() อีกครั้ง — ต้องไม่ throw และยังคง opened = true
+    component.open();
+    expect(component.opened()).toBe(true);
+  });
+
+  it('open() is no-op when disabled', () => {
+    fixture.componentRef.setInput('disabled', true);
+    fixture.detectChanges();
+    component.open();
+    expect(component.opened()).toBe(false);
+  });
 });

@@ -25,4 +25,16 @@ describe('SdDatetimePickerToggle', () => {
     fix.debugElement.query(By.css('button')).nativeElement.click();
     expect(picker.opened()).toBe(true);
   });
+
+  it('click closes the picker when already opened (covers the p.opened()===true branch)', () => {
+    TestBed.configureTestingModule({ imports: [HostCmp], providers: [provideSdNativeDateAdapter()] });
+    const fix = TestBed.createComponent(HostCmp);
+    fix.detectChanges();
+    const picker = fix.debugElement.query(By.directive(SdDatetimePicker)).componentInstance as SdDatetimePicker<Date>;
+    // เปิดก่อน แล้วกดอีกครั้งเพื่อปิด
+    fix.debugElement.query(By.css('button')).nativeElement.click();
+    expect(picker.opened()).toBe(true);
+    fix.debugElement.query(By.css('button')).nativeElement.click();
+    expect(picker.opened()).toBe(false);
+  });
 });

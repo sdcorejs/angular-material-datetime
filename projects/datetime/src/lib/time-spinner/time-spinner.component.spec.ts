@@ -210,6 +210,82 @@ describe('SdTimeSpinner keydown digit-only filter', () => {
   });
 });
 
+describe('SdTimeSpinner null-value fallback and #setUnit edge-cases', () => {
+  let fixture: ComponentFixture<SdTimeSpinner>;
+  let component: SdTimeSpinner;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    fixture = TestBed.createComponent(SdTimeSpinner);
+    component = fixture.componentInstance;
+  });
+
+  // #step: value() is null → ใช้ fallback date แทน (branch ?? new Date(...))
+  it('stepHourUp when value is null uses fallback date (hour 0+1=1) and emits', () => {
+    fixture.componentRef.setInput('value', null);
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.stepHourUp();
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][0].getHours()).toBe(1);
+  });
+
+  // #setUnit: value() is null → ใช้ fallback date แทน
+  it('onHourInput when value is null uses fallback date and emits', () => {
+    fixture.componentRef.setInput('value', null);
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onHourInput('9');
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][0].getHours()).toBe(9);
+  });
+
+  // #setUnit: disabled → return ก่อน emit
+  it('onHourInput does nothing when disabled', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 0, 0));
+    fixture.componentRef.setInput('disabled', true);
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onHourInput('5');
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  // #setUnit: cleaned === '' → return ก่อน emit (strip all non-digits เหลือ empty string)
+  it('onHourInput with only non-digit chars does not emit (cleaned becomes empty)', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 0, 0));
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onHourInput('abc');
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  // #setUnit minute: value() null → fallback date
+  it('onMinuteInput when value is null uses fallback date', () => {
+    fixture.componentRef.setInput('value', null);
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onMinuteInput('15');
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][0].getMinutes()).toBe(15);
+  });
+
+  // #setUnit second: value() null → fallback date
+  it('onSecondInput when value is null uses fallback date', () => {
+    fixture.componentRef.setInput('value', null);
+    fixture.detectChanges();
+    const spy = jest.fn();
+    component.valueChange.subscribe(spy);
+    component.onSecondInput('30');
+    expect(spy).toHaveBeenCalled();
+    expect(spy.mock.calls[0][0].getSeconds()).toBe(30);
+  });
+});
+
 describe('SdTimeSpinner display padding (focused vs unfocused)', () => {
   let fixture: ComponentFixture<SdTimeSpinner>;
   let component: SdTimeSpinner;
@@ -245,5 +321,23 @@ describe('SdTimeSpinner display padding (focused vs unfocused)', () => {
   it('focusing hour does not unpad minute', () => {
     component.setFocus('hour');
     expect(component.displayMinute()).toBe('30');
+  });
+
+  it('displayMinute is unpadded while minute is focused', () => {
+    // ต้องใช้ค่าที่ต้องการ padding เพื่อให้เห็นความแตกต่าง (30 → '30' vs '30' ไม่ต่าง, ใช้ 5 แทน)
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 5, 5, 0));
+    component.setFocus('minute');
+    expect(component.displayMinute()).toBe('5');
+  });
+
+  it('displaySecond is unpadded while second is focused', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 5, 30, 7));
+    component.setFocus('second');
+    expect(component.displaySecond()).toBe('7');
+  });
+
+  it('displaySecond pads to 2 digits when second is not focused', () => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 5, 30, 7));
+    expect(component.displaySecond()).toBe('07');
   });
 });
