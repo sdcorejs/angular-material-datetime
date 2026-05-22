@@ -1,0 +1,20 @@
+@if (opened()) {
+  <div class="sd-datetime-picker__panel" role="dialog" aria-label="Datetime picker">
+    <!-- calendar binds to native Date — adapter conversion happens when D !== Date in later iterations -->
+    <mat-calendar
+      [selected]="$any(selected())"
+      [minDate]="$any(minDate())"
+      [maxDate]="$any(maxDate())"
+      [startAt]="$any(startAt())"
+      (selectedChange)="select($any($event))">
+    </mat-calendar>
+
+    <sd-time-spinner
+      [value]="$any(selected())"
+      [showSeconds]="showSeconds()"
+      [stepMinute]="stepMinute()"
+      [disabled]="disabled()"
+      (valueChange)="select($any($event))">
+    </sd-time-spinner>
+  </div>
+}
