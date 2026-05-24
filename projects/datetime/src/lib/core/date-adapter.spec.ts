@@ -2,38 +2,38 @@ import { SdDateAdapter } from './date-adapter';
 import { DateAdapter } from '@angular/material/core';
 
 class TestAdapter extends SdDateAdapter<Date> {
-  public override getHour(d: Date): number { return d.getHours(); }
-  public override getMinute(d: Date): number { return d.getMinutes(); }
-  public override getSecond(d: Date): number { return d.getSeconds(); }
-  public override setHour(d: Date, h: number): Date { const c = new Date(d); c.setHours(h); return c; }
-  public override setMinute(d: Date, m: number): Date { const c = new Date(d); c.setMinutes(m); return c; }
-  public override setSecond(d: Date, s: number): Date { const c = new Date(d); c.setSeconds(s); return c; }
-  public override createDatetime(y: number, mo: number, d: number, h: number, mi: number, s: number): Date {
+  override getHour(d: Date): number { return d.getHours(); }
+  override getMinute(d: Date): number { return d.getMinutes(); }
+  override getSecond(d: Date): number { return d.getSeconds(); }
+  override setHour(d: Date, h: number): Date { const c = new Date(d); c.setHours(h); return c; }
+  override setMinute(d: Date, m: number): Date { const c = new Date(d); c.setMinutes(m); return c; }
+  override setSecond(d: Date, s: number): Date { const c = new Date(d); c.setSeconds(s); return c; }
+  override createDatetime(y: number, mo: number, d: number, h: number, mi: number, s: number): Date {
     return new Date(y, mo, d, h, mi, s);
   }
   // DateAdapter abstract stubs — minimal for the abstract test
-  public override getYear(): number { return 0; }
-  public override getMonth(): number { return 0; }
-  public override getDate(): number { return 0; }
-  public override getDayOfWeek(): number { return 0; }
-  public override getMonthNames(): string[] { return []; }
-  public override getDateNames(): string[] { return []; }
-  public override getDayOfWeekNames(): string[] { return []; }
-  public override getYearName(): string { return ''; }
-  public override getFirstDayOfWeek(): number { return 0; }
-  public override getNumDaysInMonth(): number { return 0; }
-  public override clone(d: Date): Date { return new Date(d); }
-  public override createDate(y: number, m: number, d: number): Date { return new Date(y, m, d); }
-  public override today(): Date { return new Date(); }
-  public override parse(): Date | null { return null; }
-  public override format(): string { return ''; }
-  public override addCalendarYears(d: Date): Date { return d; }
-  public override addCalendarMonths(d: Date): Date { return d; }
-  public override addCalendarDays(d: Date): Date { return d; }
-  public override toIso8601(d: Date): string { return d.toISOString(); }
-  public override isDateInstance(v: unknown): boolean { return v instanceof Date; }
-  public override isValid(d: Date): boolean { return !isNaN(d.getTime()); }
-  public override invalid(): Date { return new Date(NaN); }
+  override getYear(): number { return 0; }
+  override getMonth(): number { return 0; }
+  override getDate(): number { return 0; }
+  override getDayOfWeek(): number { return 0; }
+  override getMonthNames(): string[] { return []; }
+  override getDateNames(): string[] { return []; }
+  override getDayOfWeekNames(): string[] { return []; }
+  override getYearName(): string { return ''; }
+  override getFirstDayOfWeek(): number { return 0; }
+  override getNumDaysInMonth(): number { return 0; }
+  override clone(d: Date): Date { return new Date(d); }
+  override createDate(y: number, m: number, d: number): Date { return new Date(y, m, d); }
+  override today(): Date { return new Date(); }
+  override parse(): Date | null { return null; }
+  override format(): string { return ''; }
+  override addCalendarYears(d: Date): Date { return d; }
+  override addCalendarMonths(d: Date): Date { return d; }
+  override addCalendarDays(d: Date): Date { return d; }
+  override toIso8601(d: Date): string { return d.toISOString(); }
+  override isDateInstance(v: unknown): boolean { return v instanceof Date; }
+  override isValid(d: Date): boolean { return !isNaN(d.getTime()); }
+  override invalid(): Date { return new Date(NaN); }
 }
 
 describe('SdDateAdapter (contract)', () => {

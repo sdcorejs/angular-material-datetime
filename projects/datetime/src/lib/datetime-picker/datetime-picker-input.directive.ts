@@ -20,66 +20,79 @@ import { SdDatetimePicker } from './datetime-picker.component';
   },
 })
 export class SdDatetimePickerInput<D = Date> implements ControlValueAccessor, OnInit, OnDestroy {
-  private readonly adapter = inject<SdDateAdapter<D>>(SdDateAdapter as never);
-  private readonly formats = inject<SdDateFormats>(SD_DATE_FORMATS);
-  private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+  readonly #adapter = inject<SdDateAdapter<D>>(SdDateAdapter as never);
+  readonly #formats = inject<SdDateFormats>(SD_DATE_FORMATS);
+  readonly #elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
-  public readonly picker = input.required<SdDatetimePicker<D>>({ alias: 'sdDatetimePicker' });
+  readonly picker = input.required<SdDatetimePicker<D>>({ alias: 'sdDatetimePicker' });
 
-  public isDisabled = false;
+  isDisabled = false;
 
-  private onChange: (v: D | null) => void = () => {};
-  private onTouched: () => void = () => {};
-  private subs = new Subscription();
+  #onChange: (v: D | null) => void = () => {};
+  #onTouched: () => void = () => {};
+  #subs = new Subscription();
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     const p = this.picker();
-    p.setAnchor(this.elementRef.nativeElement);
+    p.setAnchor(this.#elementRef.nativeElement);
     p.setInputDisabledState(this.isDisabled);
-    this.subs.add(p.applied.subscribe((value: D) => {
-      this.onChange(value);
+    this.#subs.add(p.applied.subscribe((value: D) => {
+      this.#onChange(value);
       this.writeValue(value);
     }));
-    this.subs.add(p.cleared.subscribe(() => {
-      this.onChange(null);
+    this.#subs.add(p.cleared.subscribe(() => {
+      this.#onChange(null);
       this.writeValue(null);
     }));
   }
 
-  public ngOnDestroy(): void {
-    this.subs.unsubscribe();
+  ngOnDestroy(): void {
+    this.#subs.unsubscribe();
   }
 
-  // ControlValueAccessor
-  public writeValue(value: D | null): void {
-    const el = this.elementRef.nativeElement;
+  writeValue(value: D | null): void {
+    const el = this.#elementRef.nativeElement;
     el.value = value == null
       ? ''
-      : this.adapter.format(value, this.formats.display.datetimeInput);
-    // Sync picker's internal selected state — guard for early calls before ngOnInit
+      : this.#adapter.format(value, this.#formats.display.datetimeInput);
+
+    /**
+     * Keep the popup selection aligned with values written by Angular forms.
+     * `writeValue` can run before the required picker input is initialized, so
+     * the guard allows early CVA writes while `ngOnInit` completes the binding.
+     */
     try {
       if (value != null) {
         this.picker().select(value);
       }
     } catch {
-      // picker signal not yet available (before view init); ignore
+      // The picker input is not ready yet; a later write will sync the visible value.
     }
   }
 
-  public registerOnChange(fn: (v: D | null) => void): void { this.onChange = fn; }
-  public registerOnTouched(fn: () => void): void { this.onTouched = fn; }
-  public setDisabledState(isDisabled: boolean): void {
+  registerOnChange(fn: (v: D | null) => void): void { this.#onChange = fn; }
+  registerOnTouched(fn: () => void): void { this.#onTouched = fn; }
+
+  setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
+
+    /**
+     * Angular forms only call this CVA method on the input directive.
+     * The picker and toggle are separate instances, so forwarding the disabled
+     * state prevents suffix buttons and direct picker calls from opening a
+     * disabled form control.
+     */
     try {
       this.picker().setInputDisabledState(isDisabled);
     } catch {
-      // picker signal not yet available (before view init); ngOnInit will sync it.
+      // The picker input is not ready yet; ngOnInit forwards the latest state.
     }
   }
 
-  @HostListener('blur') public onBlur(): void { this.onTouched(); }
-  @HostListener('input', ['$event.target.value']) public onInput(raw: string): void {
-    const parsed = this.adapter.parse(raw, this.formats.parse.datetimeInput) as D | null;
-    this.onChange(parsed);
+  @HostListener('blur') onBlur(): void { this.#onTouched(); }
+
+  @HostListener('input', ['$event.target.value']) onInput(raw: string): void {
+    const parsed = this.#adapter.parse(raw, this.#formats.parse.datetimeInput) as D | null;
+    this.#onChange(parsed);
   }
 }

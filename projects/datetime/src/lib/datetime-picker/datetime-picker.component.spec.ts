@@ -25,6 +25,35 @@ describe('SdDatetimePicker', () => {
     expect(component.showSeconds()).toBe(false);
   });
 
+  it('coerces boolean inputs with booleanAttribute semantics', () => {
+    fixture.componentRef.setInput('showSeconds', '');
+    fixture.componentRef.setInput('disabled', '');
+    fixture.detectChanges();
+    expect(component.showSeconds()).toBe(true);
+    expect(component.disabled()).toBe(true);
+  });
+
+  it('coerces valid string, number, and Date inputs into dates', () => {
+    const start = new Date(2026, 4, 22, 14, 30, 0);
+    fixture.componentRef.setInput('minDate', '2026-01-01T00:00:00.000Z');
+    fixture.componentRef.setInput('maxDate', start.getTime());
+    fixture.componentRef.setInput('startAt', start);
+    fixture.detectChanges();
+    expect(component.minDate()).toBeInstanceOf(Date);
+    expect(component.maxDate()).toBeInstanceOf(Date);
+    expect(component.startAt()).toBe(start);
+  });
+
+  it('coerces undefined, null, empty, and invalid date inputs to null', () => {
+    fixture.componentRef.setInput('minDate', undefined);
+    fixture.componentRef.setInput('maxDate', '');
+    fixture.componentRef.setInput('startAt', 'not-a-date');
+    fixture.detectChanges();
+    expect(component.minDate()).toBeNull();
+    expect(component.maxDate()).toBeNull();
+    expect(component.startAt()).toBeNull();
+  });
+
   it('opened signal is false initially', () => {
     expect(component.opened()).toBe(false);
   });
@@ -40,11 +69,9 @@ describe('SdDatetimePicker', () => {
     expect(component.opened()).toBe(false);
   });
 
-  it('open() is no-op when already opened (covers disabled || opened branch)', () => {
-    // เปิดครั้งแรก ผ่าน → เปิดครั้งที่สองต้อง return ทันที
+  it('open() is no-op when already opened', () => {
     component.open();
     expect(component.opened()).toBe(true);
-    // เรียก open() อีกครั้ง — ต้องไม่ throw และยังคง opened = true
     component.open();
     expect(component.opened()).toBe(true);
   });

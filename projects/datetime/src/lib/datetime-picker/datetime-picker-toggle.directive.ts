@@ -11,9 +11,9 @@ import { SdDatetimePicker } from './datetime-picker.component';
   },
 })
 export class SdDatetimePickerToggle<D> {
-  public readonly target = input.required<SdDatetimePicker<D>>({ alias: 'sdDatetimePickerToggle' });
+  readonly target = input.required<SdDatetimePicker<D>>({ alias: 'sdDatetimePickerToggle' });
 
-  @HostListener('click') public onClick(): void {
+  @HostListener('click') onClick(): void {
     const p = this.target();
     if (p.disabledEffective()) return;
     if (p.opened()) {

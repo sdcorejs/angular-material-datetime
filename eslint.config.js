@@ -41,10 +41,11 @@ module.exports = tsEslint.config(
         'error',
         { type: 'attribute', prefix: 'sd', style: 'camelCase' },
       ],
-      // Explicit access modifiers on all class members (constructors excluded)
+      // Public is implicit; non-public members should stay explicit or use
+      // JavaScript private fields (`#field`) when the value is implementation-only.
       '@typescript-eslint/explicit-member-accessibility': [
         'error',
-        { accessibility: 'explicit', overrides: { constructors: 'no-public' } },
+        { accessibility: 'no-public', overrides: { constructors: 'no-public' } },
       ],
       // Allow empty exports in stub public-api.ts files
       '@typescript-eslint/no-empty-object-type': 'off',

@@ -12,7 +12,7 @@
       [value]="$any(selected())"
       [showSeconds]="showSeconds()"
       [stepMinute]="stepMinute()"
-      [disabled]="disabled()"
+      [disabled]="disabledEffective()"
       (valueChange)="select($any($event))">
     </sd-time-spinner>
 

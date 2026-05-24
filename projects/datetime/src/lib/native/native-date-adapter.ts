@@ -5,9 +5,13 @@ import { SdDateAdapter } from '../core/date-adapter';
 @Injectable()
 export class SdNativeDateAdapter extends NativeDateAdapter implements SdDateAdapter<Date> {
 
-  // Nếu displayFormat là string chứa token thời gian (h/H/m/s), dùng Intl để render đầy đủ ngày+giờ
-  // Lý do: NativeDateAdapter.format() chỉ nhận Intl.DateTimeFormatOptions, không hiểu chuỗi pattern
-  public override format(date: Date, displayFormat: unknown): string {
+  /**
+   * Supports string datetime formats for this library's input display.
+   * Angular Material's native adapter expects `Intl.DateTimeFormatOptions`, so
+   * string patterns that contain time tokens are mapped to equivalent Intl
+   * options before falling back to the base date-only formatter.
+   */
+  override format(date: Date, displayFormat: unknown): string {
     if (typeof displayFormat === 'string' && /[hHms]/.test(displayFormat)) {
       const opts: Intl.DateTimeFormatOptions = {
         year: 'numeric',
@@ -23,29 +27,29 @@ export class SdNativeDateAdapter extends NativeDateAdapter implements SdDateAdap
     return super.format(date, displayFormat as Intl.DateTimeFormatOptions);
   }
 
-  public getHour(date: Date): number { return date.getHours(); }
-  public getMinute(date: Date): number { return date.getMinutes(); }
-  public getSecond(date: Date): number { return date.getSeconds(); }
+  getHour(date: Date): number { return date.getHours(); }
+  getMinute(date: Date): number { return date.getMinutes(); }
+  getSecond(date: Date): number { return date.getSeconds(); }
 
-  public setHour(date: Date, hour: number): Date {
+  setHour(date: Date, hour: number): Date {
     const c = new Date(date);
     c.setHours(hour);
     return c;
   }
 
-  public setMinute(date: Date, minute: number): Date {
+  setMinute(date: Date, minute: number): Date {
     const c = new Date(date);
     c.setMinutes(minute);
     return c;
   }
 
-  public setSecond(date: Date, second: number): Date {
+  setSecond(date: Date, second: number): Date {
     const c = new Date(date);
     c.setSeconds(second);
     return c;
   }
 
-  public createDatetime(
+  createDatetime(
     year: number, month: number, date: number,
     hour: number, minute: number, second: number,
   ): Date {

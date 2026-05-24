@@ -7,6 +7,6 @@ import { SdDatetimePicker } from './datetime-picker.component';
   host: { 'type': 'button' },
 })
 export class SdDatetimePickerNow {
-  private readonly picker = inject<SdDatetimePicker<unknown>>(SdDatetimePicker);
-  @HostListener('click') public onClick(): void { this.picker.now(); }
+  readonly #picker = inject<SdDatetimePicker<unknown>>(SdDatetimePicker);
+  @HostListener('click') onClick(): void { this.#picker.now(); }
 }

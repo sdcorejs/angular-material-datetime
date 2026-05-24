@@ -23,6 +23,14 @@ describe('SdTimeSpinner', () => {
     expect(component.showSeconds()).toBe(false);
   });
 
+  it('coerces boolean inputs with booleanAttribute semantics', () => {
+    fixture.componentRef.setInput('showSeconds', '');
+    fixture.componentRef.setInput('disabled', '');
+    fixture.detectChanges();
+    expect(component.showSeconds()).toBe(true);
+    expect(component.disabled()).toBe(true);
+  });
+
   it('default stepMinute is 1', () => {
     expect(component.stepMinute()).toBe(1);
   });

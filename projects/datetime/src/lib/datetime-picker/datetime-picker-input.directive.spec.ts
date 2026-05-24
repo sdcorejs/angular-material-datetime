@@ -17,7 +17,7 @@ import { SdDatetimePickerToggle } from './datetime-picker-toggle.directive';
   `,
 })
 class HostCmp {
-  public ctrl = new FormControl<Date | null>(null);
+  ctrl = new FormControl<Date | null>(null);
 }
 
 describe('SdDatetimePickerInput (CVA)', () => {
