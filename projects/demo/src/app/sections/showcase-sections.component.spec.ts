@@ -144,6 +144,9 @@ describe('showcase example explorer', () => {
     const fixture = await createFixture(ExamplesComponent);
     const intentButtons = fixture.nativeElement.querySelectorAll('.intent-controls button') as NodeListOf<HTMLButtonElement>;
 
+    expect(intentButtons).toHaveLength(4);
+    expect([...intentButtons].every((button) => !button.classList.contains('mat-mdc-button-base'))).toBe(true);
+    expect(fixture.nativeElement.querySelectorAll('.intent-controls .mat-mdc-button-persistent-ripple')).toHaveLength(0);
     expect(fixture.nativeElement.querySelector('#featured-example h3').textContent.trim()).toBe('Basic');
     intentButtons[1].click();
     fixture.detectChanges();
