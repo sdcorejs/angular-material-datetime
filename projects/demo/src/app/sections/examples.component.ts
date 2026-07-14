@@ -70,16 +70,16 @@ type ExampleId =
         <p class="section-desc">Choose a developer intent, then run the example and inspect its complete template and component source.</p>
 
         <div class="intent-controls" role="group" aria-label="Example intent">
-          <button type="button" mat-stroked-button aria-controls="featured-example" [attr.aria-pressed]="selectedIntent() === 'quick-start'" (click)="selectIntent('quick-start')">
+          <button type="button" aria-controls="featured-example" [attr.aria-pressed]="selectedIntent() === 'quick-start'" (click)="selectIntent('quick-start')">
             Quick start <span>2</span>
           </button>
-          <button type="button" mat-stroked-button aria-controls="featured-example" [attr.aria-pressed]="selectedIntent() === 'forms-validation'" (click)="selectIntent('forms-validation')">
+          <button type="button" aria-controls="featured-example" [attr.aria-pressed]="selectedIntent() === 'forms-validation'" (click)="selectIntent('forms-validation')">
             Forms &amp; validation <span>3</span>
           </button>
-          <button type="button" mat-stroked-button aria-controls="featured-example" [attr.aria-pressed]="selectedIntent() === 'customization'" (click)="selectIntent('customization')">
+          <button type="button" aria-controls="featured-example" [attr.aria-pressed]="selectedIntent() === 'customization'" (click)="selectIntent('customization')">
             Customization <span>3</span>
           </button>
-          <button type="button" mat-stroked-button aria-controls="featured-example" [attr.aria-pressed]="selectedIntent() === 'composition'" (click)="selectIntent('composition')">
+          <button type="button" aria-controls="featured-example" [attr.aria-pressed]="selectedIntent() === 'composition'" (click)="selectIntent('composition')">
             Composition <span>1</span>
           </button>
         </div>
