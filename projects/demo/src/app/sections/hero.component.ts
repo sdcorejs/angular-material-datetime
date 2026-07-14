@@ -263,7 +263,7 @@ function formatLocalDatetime(value: Date): string {
       overflow: hidden;
       border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 76%, transparent);
       border-radius: 22px;
-      background: var(--mat-sys-surface-container-lowest);
+      background: inherit;
       box-shadow: var(--mat-sys-level1);
     }
 
@@ -275,8 +275,7 @@ function formatLocalDatetime(value: Date): string {
 
     .inline-picker sd-time-spinner {
       min-height: 100px;
-      border-top: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 62%, transparent);
-      border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 62%, transparent);
+      border-block: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 62%, transparent);
       background: var(--mat-sys-surface-container-low);
     }
 
@@ -287,7 +286,7 @@ function formatLocalDatetime(value: Date): string {
       justify-content: flex-end;
       gap: 4px;
       padding: 8px 10px;
-      background: var(--mat-sys-surface-container-lowest);
+      background: inherit;
     }
 
     .preview-actions button:first-child {
