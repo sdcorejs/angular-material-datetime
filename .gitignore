@@ -28,6 +28,7 @@
 
 # Misc
 /.angular/cache
+/.sdcorejs/tasks/current-session.md
 .sass-cache/
 /connect.lock
 /libpeerconnection.log

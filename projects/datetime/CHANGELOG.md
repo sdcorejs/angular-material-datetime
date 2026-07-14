@@ -1,5 +1,11 @@
 # @sdcorejs/angular-material-datetime
 
+## 1.0.3
+
+### Patch Changes
+
+- Publish the ng-packagr Angular Package Format output instead of the source project, and harden datetime state, adapter independence, validation, accessibility, internationalization, responsive overlays, and package metadata for the 1.0.3 release.
+
 ## 1.0.2
 
 ### Patch Changes

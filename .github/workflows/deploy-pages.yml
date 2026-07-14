@@ -26,7 +26,7 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Build libraries (consumed by demo)
         run: npm run build:all

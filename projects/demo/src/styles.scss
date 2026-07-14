@@ -61,6 +61,242 @@ pre {
   font-family: 'Roboto Mono', 'SFMono-Regular', Consolas, monospace;
 }
 
+// The source-linked library keeps its spinner icons deliberately lightweight.
+// Supply the ligature font at the showcase boundary so embedded and overlay
+// previews render consistently with the Material icon font loaded by index.html.
+sd-time-spinner mat-icon {
+  direction: ltr;
+  display: inline-block;
+  font-family: 'Material Icons';
+  font-feature-settings: 'liga';
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+// Shared hero actions live globally to keep the standalone component style bundle within budget.
+app-hero .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+app-hero .hero-button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 20px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+app-hero .hero-button:hover {
+  transform: translateY(-2px);
+}
+
+app-hero .hero-button-primary {
+  border-color: var(--mat-sys-primary);
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  box-shadow: var(--mat-sys-level2);
+}
+
+app-hero .hero-button-secondary {
+  background: var(--mat-sys-surface-container-lowest);
+  color: var(--mat-sys-primary);
+}
+
+app-hero .capabilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+app-hero .capabilities span {
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 24%, var(--mat-sys-outline-variant));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--mat-sys-primary-container) 62%, transparent);
+  color: var(--mat-sys-on-primary-container);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+app-hero .preview-readable {
+  margin: 3px 4px 0;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 11px;
+  text-align: right;
+}
+
+@media (max-width: 767px) {
+  app-hero .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  app-hero .hero-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 390px) {
+  app-hero .preview-readable {
+    text-align: left;
+  }
+}
+
+// Shared example navigation is global so the featured component stays below its style budget.
+app-examples .intent-controls {
+  display: flex;
+  max-width: 100%;
+  gap: 10px;
+  margin-bottom: 28px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  scrollbar-width: thin;
+}
+
+app-examples .intent-controls button {
+  min-height: 44px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+}
+
+app-examples .intent-controls button[aria-pressed='true'] {
+  border-color: var(--mat-sys-primary);
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+app-examples .intent-controls span {
+  min-width: 22px;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  font-size: 11px;
+  line-height: 20px;
+}
+
+app-examples .example-index {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+app-examples .intent-group {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 20px;
+  background: var(--mat-sys-surface-container-low);
+  scroll-margin-top: 88px;
+}
+
+app-examples .intent-group h3 {
+  margin: 0 0 4px;
+  color: var(--mat-sys-on-surface);
+  font-size: 18px;
+  font-weight: 750;
+}
+
+app-examples .intent-group > p {
+  margin: 0 0 14px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+app-examples .choice-list {
+  display: grid;
+  gap: 8px;
+}
+
+app-examples .example-choice {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 62px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: var(--mat-sys-surface-container-lowest);
+  color: var(--mat-sys-on-surface);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  scroll-margin-top: 88px;
+}
+
+app-examples .example-choice:hover {
+  border-color: var(--mat-sys-outline);
+}
+
+app-examples .example-choice[aria-pressed='true'] {
+  border-color: var(--mat-sys-primary);
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+app-examples .example-choice span {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+app-examples .example-choice strong,
+app-examples .example-choice small {
+  overflow-wrap: anywhere;
+}
+
+app-examples .example-choice strong {
+  font-size: 14px;
+}
+
+app-examples .example-choice small {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+app-examples .example-choice[aria-pressed='true'] small {
+  color: var(--mat-sys-on-primary-container);
+}
+
+app-examples .example-choice mat-icon {
+  flex: 0 0 auto;
+  color: var(--mat-sys-primary);
+}
+
+@media (max-width: 600px) {
+  app-examples .example-index {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  app-examples .intent-group {
+    padding: 16px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -73,6 +309,10 @@ pre {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  app-hero .hero-button:hover {
+    transform: none;
   }
 }
 

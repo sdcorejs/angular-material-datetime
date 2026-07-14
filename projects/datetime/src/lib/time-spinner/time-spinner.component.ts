@@ -1,7 +1,13 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, booleanAttribute, computed,
+  inject, input, output, signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { SdDateAdapter } from '../core/date-adapter';
+import { SdDatetimeIntl } from '../core/datetime-intl';
+import { normalizeSdMinuteStep } from '../core/default-options';
 
 @Component({
   selector: 'sd-time-spinner',
@@ -12,17 +18,24 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'sd-time-spinner' },
 })
-export class SdTimeSpinner {
-  readonly value = input<Date | null>(null);
+export class SdTimeSpinner<D = Date> implements OnDestroy {
+  readonly #adapter = inject<SdDateAdapter<D>>(SdDateAdapter as never);
+  readonly #cdr = inject(ChangeDetectorRef);
+  readonly intl = inject(SdDatetimeIntl);
+  readonly #intlSubscription = this.intl.changes.subscribe(() => this.#cdr.markForCheck());
+
+  readonly value = input<D | null>(null);
+  readonly baseValue = input<D | null>(null);
   readonly showSeconds = input(false, { transform: booleanAttribute });
-  readonly stepMinute = input<number>(1);
+  readonly stepMinute = input(1, { transform: normalizeSdMinuteStep });
   readonly disabled = input(false, { transform: booleanAttribute });
 
-  readonly valueChange = output<Date>();
+  readonly valueChange = output<D>();
 
-  readonly hour = computed(() => this.value()?.getHours() ?? 0);
-  readonly minute = computed(() => this.value()?.getMinutes() ?? 0);
-  readonly second = computed(() => this.value()?.getSeconds() ?? 0);
+  readonly #effectiveValue = computed(() => this.value() ?? this.baseValue() ?? this.#adapter.today());
+  readonly hour = computed(() => this.#adapter.getHour(this.#effectiveValue()));
+  readonly minute = computed(() => this.#adapter.getMinute(this.#effectiveValue()));
+  readonly second = computed(() => this.#adapter.getSecond(this.#effectiveValue()));
 
   readonly #focusedUnit = signal<'hour' | 'minute' | 'second' | null>(null);
 
@@ -58,11 +71,11 @@ export class SdTimeSpinner {
    */
   #step(unit: 'hour' | 'minute' | 'second', delta: number): void {
     if (this.disabled()) return;
-    const base = this.value() ?? new Date(2026, 0, 1, 0, 0, 0);
-    const next = new Date(base);
-    if (unit === 'hour') next.setHours(this.#wrap(base.getHours() + delta, 24));
-    if (unit === 'minute') next.setMinutes(this.#wrap(base.getMinutes() + delta, 60));
-    if (unit === 'second') next.setSeconds(this.#wrap(base.getSeconds() + delta, 60));
+    const base = this.#effectiveValue();
+    let next = this.#adapter.clone(base);
+    if (unit === 'hour') next = this.#adapter.setHour(next, this.#wrap(this.#adapter.getHour(base) + delta, 24));
+    if (unit === 'minute') next = this.#adapter.setMinute(next, this.#wrap(this.#adapter.getMinute(base) + delta, 60));
+    if (unit === 'second') next = this.#adapter.setSecond(next, this.#wrap(this.#adapter.getSecond(base) + delta, 60));
     this.valueChange.emit(next);
   }
 
@@ -73,6 +86,11 @@ export class SdTimeSpinner {
    */
   #wrap(v: number, mod: number): number {
     return ((v % mod) + mod) % mod;
+  }
+
+  onInputEvent(unit: 'hour' | 'minute' | 'second', event: Event): void {
+    const target = event.target;
+    if (target instanceof HTMLInputElement) this.#setUnit(unit, target.value, 0, unit === 'hour' ? 23 : 59);
   }
 
   onHourInput(raw: string): void { this.#setUnit('hour', raw, 0, 23); }
@@ -90,6 +108,15 @@ export class SdTimeSpinner {
     if (!/^\d$/.test(event.key)) event.preventDefault();
   }
 
+  onSpinKeyDown(unit: 'hour' | 'minute' | 'second', event: KeyboardEvent): void {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'Home' && event.key !== 'End') return;
+    event.preventDefault();
+    if (event.key === 'ArrowUp') this.#step(unit, unit === 'minute' ? this.stepMinute() : 1);
+    if (event.key === 'ArrowDown') this.#step(unit, unit === 'minute' ? -this.stepMinute() : -1);
+    if (event.key === 'Home') this.#setUnit(unit, '0', 0, unit === 'hour' ? 23 : 59);
+    if (event.key === 'End') this.#setUnit(unit, unit === 'hour' ? '23' : '59', 0, unit === 'hour' ? 23 : 59);
+  }
+
   /**
    * Handles direct keyboard input for one time segment.
    * Non-digits are removed, the value is capped to two characters, then clamped
@@ -97,16 +124,17 @@ export class SdTimeSpinner {
    */
   #setUnit(unit: 'hour' | 'minute' | 'second', raw: string, min: number, max: number): void {
     if (this.disabled()) return;
-    const cleaned = (raw ?? '').replace(/\D/g, '').slice(0, 2);
+    const cleaned = raw.replace(/\D/g, '').slice(0, 2);
     if (cleaned === '') return;
     const v = Number.parseInt(cleaned, 10);
-    if (Number.isNaN(v)) return;
     const clamped = Math.min(Math.max(v, min), max);
-    const base = this.value() ?? new Date(2026, 0, 1, 0, 0, 0);
-    const next = new Date(base);
-    if (unit === 'hour') next.setHours(clamped);
-    if (unit === 'minute') next.setMinutes(clamped);
-    if (unit === 'second') next.setSeconds(clamped);
+    const base = this.#effectiveValue();
+    let next = this.#adapter.clone(base);
+    if (unit === 'hour') next = this.#adapter.setHour(next, clamped);
+    if (unit === 'minute') next = this.#adapter.setMinute(next, clamped);
+    if (unit === 'second') next = this.#adapter.setSecond(next, clamped);
     this.valueChange.emit(next);
   }
+
+  ngOnDestroy(): void { this.#intlSubscription.unsubscribe(); }
 }

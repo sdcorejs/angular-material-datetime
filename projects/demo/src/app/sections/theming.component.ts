@@ -20,8 +20,8 @@ import { CodeBlockComponent } from '../code-block.component';
         <div class="theming-layout">
           <article class="theming-card theming-card-featured">
             <div class="card-heading">
-              <span class="step">01</span>
               <div>
+                <p class="card-kicker">Foundation</p>
                 <h3>Apply your application theme</h3>
                 <p>Include <code>mat.theme</code> at the document root so system variables are available to overlays.</p>
               </div>
@@ -31,8 +31,8 @@ import { CodeBlockComponent } from '../code-block.component';
 
           <article class="theming-card token-card">
             <div class="card-heading">
-              <span class="step">02</span>
               <div>
+                <p class="card-kicker">Reference</p>
                 <h3>System tokens used</h3>
                 <p>The picker stays visually aligned with the rest of your Angular Material application.</p>
               </div>
@@ -59,8 +59,8 @@ import { CodeBlockComponent } from '../code-block.component';
 
           <article class="theming-card">
             <div class="card-heading">
-              <span class="step">03</span>
               <div>
+                <p class="card-kicker">Scoped override</p>
                 <h3>Customize with scoped tokens</h3>
                 <p>Override system values on the picker overlay panel when one context needs a distinct treatment.</p>
               </div>
@@ -70,8 +70,8 @@ import { CodeBlockComponent } from '../code-block.component';
 
           <article class="theming-card dark-card">
             <div class="card-heading">
-              <span class="step">04</span>
               <div>
+                <p class="card-kicker">Theme mode</p>
                 <h3>Dark theme compatibility</h3>
                 <p>Generate a dark M3 theme on your theme class. The overlay follows the active system tokens automatically.</p>
               </div>
@@ -146,30 +146,25 @@ import { CodeBlockComponent } from '../code-block.component';
       background: linear-gradient(135deg, var(--mat-sys-primary-container), var(--mat-sys-surface-container-lowest) 70%);
     }
 
+    .token-card {
+      grid-column: 1 / -1;
+    }
+
     .card-heading {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
       margin-bottom: 22px;
     }
 
-    .step {
-      display: inline-flex;
-      width: 36px;
-      height: 36px;
-      flex: 0 0 36px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      background: var(--mat-sys-primary);
-      color: var(--mat-sys-on-primary);
-      font-size: 12px;
+    .card-kicker {
+      margin: 0 0 8px;
+      color: var(--mat-sys-primary);
+      font-size: 11px;
       font-weight: 800;
-      letter-spacing: .04em;
+      letter-spacing: .1em;
+      text-transform: uppercase;
     }
 
     .card-heading h3 {
-      margin: 2px 0 6px;
+      margin: 0 0 6px;
       color: var(--mat-sys-on-surface);
       font-size: 19px;
       font-weight: 700;
@@ -193,8 +188,8 @@ import { CodeBlockComponent } from '../code-block.component';
     }
 
     .token-list {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1px;
       overflow: hidden;
       margin: 0;
@@ -210,6 +205,7 @@ import { CodeBlockComponent } from '../code-block.component';
 
     .token-list dt {
       margin-bottom: 5px;
+      overflow-wrap: anywhere;
     }
 
     .token-list dd {
@@ -226,12 +222,21 @@ import { CodeBlockComponent } from '../code-block.component';
       color: var(--mat-sys-on-tertiary-container);
     }
 
+    .theming-card app-code {
+      display: block;
+      min-width: 0;
+    }
+
     @media (max-width: 820px) {
       .theming-layout {
         grid-template-columns: 1fr;
       }
 
       .theming-card-featured {
+        grid-column: auto;
+      }
+
+      .token-card {
         grid-column: auto;
       }
     }
@@ -256,6 +261,10 @@ import { CodeBlockComponent } from '../code-block.component';
       .theming-card {
         padding: 20px;
         border-radius: 20px;
+      }
+
+      .token-list {
+        grid-template-columns: 1fr;
       }
     }
   `],

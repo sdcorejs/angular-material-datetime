@@ -9,29 +9,29 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <div class="footer-brand">
           <img src="brand/logo.png" alt="SDCoreJS" class="footer-logo">
           <div>
-            <p class="footer-kicker">Open-source Angular tooling</p>
-            <h2>Thoughtful datetime controls for Material 3.</h2>
-            <p class="footer-summary">Signal-driven, adapter-pluggable components maintained as part of the SDCoreJS ecosystem.</p>
+            <p class="footer-kicker">SDCoreJS · Angular Material Datetime</p>
+            <h2>Datetime controls that speak Material 3.</h2>
+            <p class="footer-summary">Signal-driven, adapter-pluggable components for Angular applications.</p>
           </div>
         </div>
 
         <div class="footer-col">
           <h3 class="footer-heading">Project</h3>
           <ul>
-            <li><a href="https://github.com/sdcorejs/angular-material-datetime" target="_blank" rel="noopener noreferrer">GitHub repository <span aria-hidden="true">↗</span></a></li>
-            <li><a href="https://www.npmjs.com/package/@sdcorejs/angular-material-datetime" target="_blank" rel="noopener noreferrer">npm package <span aria-hidden="true">↗</span></a></li>
-            <li><a href="https://github.com/sdcorejs/angular-material-datetime/issues" target="_blank" rel="noopener noreferrer">Issues <span aria-hidden="true">↗</span></a></li>
-            <li><a href="https://github.com/sdcorejs/angular-material-datetime/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog <span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://github.com/sdcorejs/angular-material-datetime" target="_blank" rel="noopener noreferrer">GitHub repository <span aria-hidden="true">&#8599;</span></a></li>
+            <li><a href="https://www.npmjs.com/package/@sdcorejs/angular-material-datetime" target="_blank" rel="noopener noreferrer">npm package <span aria-hidden="true">&#8599;</span></a></li>
+            <li><a href="https://github.com/sdcorejs/angular-material-datetime/issues" target="_blank" rel="noopener noreferrer">Issues <span aria-hidden="true">&#8599;</span></a></li>
+            <li><a href="https://github.com/sdcorejs/angular-material-datetime/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog <span aria-hidden="true">&#8599;</span></a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h3 class="footer-heading">SDCoreJS</h3>
           <ul>
-            <li><a href="https://github.com/sdcorejs" target="_blank" rel="noopener noreferrer">GitHub organization <span aria-hidden="true">↗</span></a></li>
-            <li><a href="https://www.npmjs.com/org/sdcorejs" target="_blank" rel="noopener noreferrer">npm organization <span aria-hidden="true">↗</span></a></li>
+            <li><a href="https://github.com/sdcorejs" target="_blank" rel="noopener noreferrer">GitHub organization <span aria-hidden="true">&#8599;</span></a></li>
+            <li><a href="https://www.npmjs.com/org/sdcorejs" target="_blank" rel="noopener noreferrer">npm organization <span aria-hidden="true">&#8599;</span></a></li>
           </ul>
-          <p class="footer-stack">Built with Angular 19, Angular Material 19, standalone components, and signals.</p>
+          <p class="footer-stack">Verified with Angular 19–21 · Material 3 · Standalone components and signals.</p>
         </div>
 
         <div class="footer-bottom">
@@ -41,8 +41,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <a href="mailto:tran.thuan.nghia@gmail.com">tran.thuan.nghia&#64;gmail.com</a>
           </div>
           <div class="footer-meta">
-            <p>&copy; 2026 SDCoreJS contributors · Released under the MIT License</p>
+            <p>&copy; 2026 SDCoreJS contributors <span aria-hidden="true">&middot;</span> <a href="https://github.com/sdcorejs/angular-material-datetime/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a></p>
             <a class="version-badge" href="https://www.npmjs.com/package/@sdcorejs/angular-material-datetime" target="_blank" rel="noopener noreferrer" aria-label="View current npm version">
+              <span>View on npm</span>
               <img src="https://img.shields.io/npm/v/@sdcorejs/angular-material-datetime?style=flat-square&label=npm" alt="npm version" loading="lazy">
             </a>
           </div>
@@ -52,7 +53,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   styles: [`
     .footer {
-      padding: 72px 24px 28px;
+      padding: 48px 24px 24px;
       background: var(--mat-sys-inverse-surface);
       color: var(--mat-sys-inverse-on-surface);
     }
@@ -62,13 +63,21 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       max-width: 1184px;
       margin: 0 auto;
       grid-template-columns: minmax(0, 2fr) minmax(150px, .75fr) minmax(190px, 1fr);
-      gap: 48px;
+      gap: 32px 48px;
     }
 
     .footer-brand {
       display: flex;
+      min-width: 0;
       align-items: flex-start;
       gap: 18px;
+    }
+
+    .footer-brand > div,
+    .footer-col,
+    .footer-bottom,
+    .footer-meta {
+      min-width: 0;
     }
 
     .footer-logo {
@@ -80,19 +89,19 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     }
 
     .footer-kicker {
-      margin: 0 0 10px;
+      margin: 0 0 8px;
       color: var(--mat-sys-inverse-primary);
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: .12em;
+      letter-spacing: .1em;
       text-transform: uppercase;
     }
 
     .footer-brand h2 {
       max-width: 500px;
-      margin: 0 0 12px;
+      margin: 0 0 8px;
       color: var(--mat-sys-inverse-on-surface);
-      font-size: clamp(24px, 3vw, 34px);
+      font-size: clamp(21px, 2.5vw, 28px);
       font-weight: 700;
       letter-spacing: -.025em;
       line-height: 1.18;
@@ -104,11 +113,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       margin: 0;
       color: color-mix(in srgb, var(--mat-sys-inverse-on-surface) 72%, transparent);
       font-size: 14px;
-      line-height: 1.65;
+      line-height: 1.6;
     }
 
     .footer-heading {
-      margin: 0 0 16px;
+      margin: 0 0 8px;
       color: var(--mat-sys-inverse-on-surface);
       font-size: 12px;
       font-weight: 800;
@@ -119,7 +128,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     .footer-col ul {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 2px;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -127,9 +136,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
     .footer-col a,
     .author a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
       border-radius: 5px;
       color: color-mix(in srgb, var(--mat-sys-inverse-on-surface) 78%, transparent);
       font-size: 14px;
+      overflow-wrap: anywhere;
       text-decoration: none;
       transition: color 160ms ease;
     }
@@ -142,25 +155,26 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     }
 
     .footer-stack {
-      margin-top: 22px;
+      margin-top: 16px;
       font-size: 13px;
     }
 
     .footer-bottom {
       display: flex;
       grid-column: 1 / -1;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-between;
-      gap: 28px;
-      margin-top: 14px;
-      padding-top: 28px;
+      gap: 24px;
+      margin-top: 4px;
+      padding-top: 20px;
       border-top: 1px solid color-mix(in srgb, var(--mat-sys-inverse-on-surface) 18%, transparent);
     }
 
     .author {
       display: grid;
+      min-width: 0;
       grid-template-columns: auto auto;
-      gap: 2px 12px;
+      gap: 0 12px;
     }
 
     .author span {
@@ -174,10 +188,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     }
 
     .author strong {
+      align-self: end;
       font-size: 14px;
     }
 
     .author a {
+      align-self: start;
       font-size: 13px;
     }
 
@@ -185,19 +201,39 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 16px;
+      gap: 12px;
     }
 
     .footer-meta p {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 4px;
       margin: 0;
       color: color-mix(in srgb, var(--mat-sys-inverse-on-surface) 58%, transparent);
       font-size: 12px;
     }
 
+    .footer-meta p a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      border-radius: 5px;
+      color: inherit;
+      text-underline-offset: 3px;
+    }
+
     .version-badge {
       display: inline-flex;
-      padding: 4px;
+      min-height: 44px;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 8px;
+      padding: 0 6px;
       border-radius: 6px;
+      color: var(--mat-sys-inverse-on-surface);
+      font-size: 12px;
+      text-decoration: none;
     }
 
     .version-badge img {
@@ -206,7 +242,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     }
 
     .footer a:focus-visible {
-      outline-color: var(--mat-sys-inverse-primary);
+      outline: 3px solid var(--mat-sys-inverse-primary);
+      outline-offset: 3px;
     }
 
     @media (max-width: 900px) {
@@ -217,16 +254,25 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       .footer-brand {
         grid-column: 1 / -1;
       }
+
+      .footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .footer-meta {
+        justify-content: flex-start;
+      }
     }
 
     @media (max-width: 620px) {
       .footer {
-        padding: 56px 16px 24px;
+        padding: 40px 16px 24px;
       }
 
       .footer-inner {
         grid-template-columns: 1fr;
-        gap: 36px;
+        gap: 24px;
       }
 
       .footer-brand {
@@ -236,14 +282,25 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
       .footer-bottom {
         grid-column: auto;
-        align-items: flex-start;
-        flex-direction: column;
         margin-top: 0;
       }
 
-      .footer-meta {
+      .footer-meta,
+      .footer-meta p {
         align-items: flex-start;
         flex-direction: column;
+      }
+
+      .author a,
+      .footer-meta p {
+        overflow-wrap: anywhere;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .footer-col a,
+      .author a {
+        transition: none;
       }
     }
   `],

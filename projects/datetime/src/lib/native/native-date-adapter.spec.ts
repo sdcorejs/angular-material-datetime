@@ -98,4 +98,45 @@ describe('SdNativeDateAdapter', () => {
     // Intl với date-only options → không chứa thời gian (không có dạng h:mm)
     expect(out).not.toMatch(/\d+:\d+/);
   });
+
+  it('formats shortDate as date-only instead of inferring time tokens from its letters', () => {
+    const d = new Date(2026, 4, 22, 14, 30, 45);
+    expect(adapter.format(d, 'shortDate')).toBe(
+      new Intl.DateTimeFormat('en-US', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+      }).format(d),
+    );
+  });
+
+  it('formats short datetime without seconds and explicit seconds format with seconds', () => {
+    const d = new Date(2026, 4, 22, 14, 30, 45);
+    const withoutSeconds = adapter.format(d, 'short');
+    const withSeconds = adapter.format(d, 'datetime-with-seconds');
+
+    expect(withoutSeconds).toBe(
+      new Intl.DateTimeFormat('en-US', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: 'numeric', minute: '2-digit',
+      }).format(d),
+    );
+    expect(withSeconds).toBe(
+      new Intl.DateTimeFormat('en-US', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: 'numeric', minute: '2-digit', second: '2-digit',
+      }).format(d),
+    );
+  });
+
+  it('deserializes timestamps and rejects an invalid numeric timestamp', () => {
+    const timestamp = new Date(2026, 4, 22, 14, 30, 0).getTime();
+    expect(adapter.deserialize(timestamp)).toEqual(new Date(timestamp));
+    expect(adapter.isValid(adapter.deserialize(Number.NaN) as Date)).toBe(false);
+    expect(adapter.deserialize('2026-05-22')).toBeInstanceOf(Date);
+  });
+
+  it('rejects unsupported string display formats explicitly', () => {
+    expect(() => adapter.format(new Date(2026, 4, 22), 'unknown-format')).toThrow(
+      'Unsupported native datetime format: unknown-format',
+    );
+  });
 });

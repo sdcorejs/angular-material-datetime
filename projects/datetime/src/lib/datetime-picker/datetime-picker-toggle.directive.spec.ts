@@ -37,4 +37,22 @@ describe('SdDatetimePickerToggle', () => {
     fix.debugElement.query(By.css('button')).nativeElement.click();
     expect(picker.opened()).toBe(false);
   });
+
+  it('updates aria-expanded/controls and restores focus when closed', () => {
+    TestBed.configureTestingModule({ imports: [HostCmp], providers: [provideSdNativeDateAdapter()] });
+    const fix = TestBed.createComponent(HostCmp);
+    fix.detectChanges();
+    const button = fix.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+    const picker = fix.debugElement.query(By.directive(SdDatetimePicker)).componentInstance as SdDatetimePicker<Date>;
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+    expect(button.getAttribute('aria-controls')).toBe(picker.panelId);
+
+    button.focus();
+    button.click();
+    fix.detectChanges();
+    expect(button.getAttribute('aria-expanded')).toBe('true');
+    picker.cancel();
+    fix.detectChanges();
+    expect(document.activeElement).toBe(button);
+  });
 });

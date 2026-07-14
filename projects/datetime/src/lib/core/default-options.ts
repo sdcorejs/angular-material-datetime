@@ -8,9 +8,13 @@ export interface SdDatetimeDefaultOptions {
   stepMinute?: number;
   /** Touch-friendly modal mode instead of inline overlay. */
   touchUi?: boolean;
-  /** Material theme palette for the picker UI. */
+  /** @deprecated Material 3 colors are inherited from system CSS variables. */
   color?: ThemePalette;
 }
 
 export const SD_DATETIME_DEFAULT_OPTIONS =
   new InjectionToken<SdDatetimeDefaultOptions>('sd-datetime-default-options');
+
+export function normalizeSdMinuteStep(value: number | undefined): number {
+  return Number.isFinite(value) && Number.isInteger(value) && value! > 0 && value! <= 60 ? value! : 1;
+}

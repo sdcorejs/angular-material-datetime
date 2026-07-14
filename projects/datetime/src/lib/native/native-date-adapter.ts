@@ -2,27 +2,44 @@ import { Injectable } from '@angular/core';
 import { NativeDateAdapter } from '@angular/material/core';
 import { SdDateAdapter } from '../core/date-adapter';
 
+const NATIVE_FORMATS: Readonly<Record<string, Intl.DateTimeFormatOptions>> = {
+  shortDate: { year: 'numeric', month: 'numeric', day: 'numeric' },
+  short: {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: '2-digit',
+  },
+  shortTime: { hour: 'numeric', minute: '2-digit' },
+  'datetime-with-seconds': {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: '2-digit', second: '2-digit',
+  },
+  'time-with-seconds': { hour: 'numeric', minute: '2-digit', second: '2-digit' },
+  // Retain the pattern documented by previous releases without guessing from
+  // arbitrary characters in a format name such as `shortDate`.
+  'M/d/yyyy h:mm a': {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: '2-digit', hour12: true,
+  },
+};
+
 @Injectable()
 export class SdNativeDateAdapter extends NativeDateAdapter implements SdDateAdapter<Date> {
 
-  /**
-   * Supports string datetime formats for this library's input display.
-   * Angular Material's native adapter expects `Intl.DateTimeFormatOptions`, so
-   * string patterns that contain time tokens are mapped to equivalent Intl
-   * options before falling back to the base date-only formatter.
-   */
+  override deserialize(value: unknown): Date | null {
+    if (typeof value === 'number') {
+      const date = new Date(value);
+      return this.isValid(date) ? date : this.invalid();
+    }
+    return super.deserialize(value);
+  }
+
   override format(date: Date, displayFormat: unknown): string {
-    if (typeof displayFormat === 'string' && /[hHms]/.test(displayFormat)) {
-      const opts: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        ...(/s/.test(displayFormat) ? { second: '2-digit' } : {}),
-        hour12: /a/i.test(displayFormat),
-      };
-      return new Intl.DateTimeFormat(this.locale, opts).format(date);
+    if (typeof displayFormat === 'string') {
+      const options = NATIVE_FORMATS[displayFormat];
+      if (!options) {
+        throw new Error(`Unsupported native datetime format: ${displayFormat}`);
+      }
+      return new Intl.DateTimeFormat(this.locale, options).format(date);
     }
     return super.format(date, displayFormat as Intl.DateTimeFormatOptions);
   }
@@ -58,5 +75,16 @@ export class SdNativeDateAdapter extends NativeDateAdapter implements SdDateAdap
     if (minute < 0 || minute > 59) throw Error(`minute ${minute} out of range [0,59]`);
     if (second < 0 || second > 59) throw Error(`second ${second} out of range [0,59]`);
     return new Date(year, month, date, hour, minute, second);
+  }
+
+  combineDateAndTime(datePart: Date, timePart: Date): Date {
+    return this.createDatetime(
+      this.getYear(datePart), this.getMonth(datePart), this.getDate(datePart),
+      this.getHour(timePart), this.getMinute(timePart), this.getSecond(timePart),
+    );
+  }
+
+  compareDatetime(first: Date, second: Date): number {
+    return Math.sign(first.getTime() - second.getTime());
   }
 }

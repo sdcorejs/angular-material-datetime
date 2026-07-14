@@ -1,7 +1,7 @@
 {
   "name": "@sdcorejs/angular-material-datetime-moment",
   "version": "1.0.2",
-  "description": "Moment.js date adapter for the Material 3 @sdcorejs/angular-material-datetime picker",
+  "description": "Placeholder package — runtime Moment adapter is not implemented yet.",
   "author": {
     "name": "Trần Thuận Nghĩa",
     "email": "tran.thuan.nghia@gmail.com",
@@ -22,9 +22,5 @@
     "moment"
   ],
   "sideEffects": false,
-  "peerDependencies": {
-    "@angular/core": ">=19.0.0 <22.0.0",
-    "@sdcorejs/angular-material-datetime": "^1.0.0",
-    "moment": "^2.29.0"
-  }
+  "peerDependencies": {}
 }

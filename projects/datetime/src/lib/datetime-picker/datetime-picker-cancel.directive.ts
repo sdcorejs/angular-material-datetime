@@ -8,5 +8,5 @@ import { SdDatetimePicker } from './datetime-picker.component';
 })
 export class SdDatetimePickerCancel {
   readonly #picker = inject<SdDatetimePicker<unknown>>(SdDatetimePicker);
-  @HostListener('click') onClick(): void { this.#picker.close(); }
+  @HostListener('click') onClick(): void { this.#picker.cancel(); }
 }

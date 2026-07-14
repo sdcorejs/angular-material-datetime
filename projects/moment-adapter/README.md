@@ -18,21 +18,7 @@ export const appConfig = {
 };
 ```
 
-## Install
-
-```bash
-npm install @sdcorejs/angular-material-datetime @sdcorejs/angular-material-datetime-moment moment
-```
-
-Installing this package is only useful if you want to pin the future adapter package name now. For production use in `1.0.x`, configure the native adapter instead.
-
-## Peer Dependencies
-
-| Dependency | Supported range |
-| --- | --- |
-| `@angular/core` | `>=19.0.0 <22.0.0` |
-| `@sdcorejs/angular-material-datetime` | `^1.0.0` |
-| `moment` | `^2.29.0` |
+Do not install this placeholder for production use. It has no runtime exports and is excluded from the current release workflow.
 
 ## Roadmap
 

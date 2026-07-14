@@ -5,6 +5,9 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
   testEnvironment: 'jsdom',
   moduleFileExtensions: ['ts', 'html', 'js', 'mjs'],
+  moduleNameMapper: {
+    '^@sdcorejs/angular-material-datetime$': '<rootDir>/projects/datetime/src/public-api.ts',
+  },
   testMatch: ['<rootDir>/projects/**/*.spec.ts'],
   collectCoverageFrom: [
     'projects/datetime/src/**/*.ts',

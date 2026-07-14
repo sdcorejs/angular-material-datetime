@@ -12,9 +12,9 @@ class TestAdapter extends SdDateAdapter<Date> {
     return new Date(y, mo, d, h, mi, s);
   }
   // DateAdapter abstract stubs — minimal for the abstract test
-  override getYear(): number { return 0; }
-  override getMonth(): number { return 0; }
-  override getDate(): number { return 0; }
+  override getYear(d: Date): number { return d.getFullYear(); }
+  override getMonth(d: Date): number { return d.getMonth(); }
+  override getDate(d: Date): number { return d.getDate(); }
   override getDayOfWeek(): number { return 0; }
   override getMonthNames(): string[] { return []; }
   override getDateNames(): string[] { return []; }
@@ -74,5 +74,20 @@ describe('SdDateAdapter (contract)', () => {
     expect(d.getHours()).toBe(14);
     expect(d.getMinutes()).toBe(30);
     expect(d.getSeconds()).toBe(15);
+  });
+
+  it('combines date and time parts without mutating either input', () => {
+    const date = new Date(2026, 7, 1, 0, 0, 0);
+    const time = new Date(2000, 0, 1, 9, 45, 20);
+    expect(adapter.combineDateAndTime(date, time)).toEqual(new Date(2026, 7, 1, 9, 45, 20));
+    expect(date.getHours()).toBe(0);
+    expect(time.getFullYear()).toBe(2000);
+  });
+
+  it('compares full datetimes across equal, earlier, and later parts', () => {
+    const value = new Date(2026, 7, 1, 9, 45, 20);
+    expect(adapter.compareDatetime(value, new Date(value))).toBe(0);
+    expect(adapter.compareDatetime(value, new Date(2026, 7, 1, 9, 45, 21))).toBe(-1);
+    expect(adapter.compareDatetime(value, new Date(2025, 7, 1, 9, 45, 20))).toBe(1);
   });
 });

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideSdNativeDateAdapter } from '../native/provide-native';
 import { SdDatetimePicker } from './datetime-picker.component';
+import { SdDatetimeIntl } from '../core/datetime-intl';
 
 describe('SdDatetimePicker overlay', () => {
   let fixture: ComponentFixture<SdDatetimePicker<Date>>;
@@ -39,6 +40,56 @@ describe('SdDatetimePicker overlay', () => {
     backdrop.click();
     fixture.detectChanges();
     expect(component.opened()).toBe(false);
+  });
+
+  it('backdrop and Escape roll draft back to committed value', () => {
+    const committed = new Date(2026, 6, 14, 14, 0, 0);
+    component.setValue(committed);
+    component.open();
+    component.select(new Date(2026, 7, 1, 9, 0, 0));
+    (document.querySelector('.cdk-overlay-backdrop') as HTMLElement).click();
+    expect(component.selected()).toEqual(committed);
+
+    component.open();
+    fixture.detectChanges();
+    component.select(new Date(2026, 8, 1, 10, 0, 0));
+    (document.querySelector('[role="dialog"]') as HTMLElement)
+      .dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(component.opened()).toBe(false);
+    expect(component.selected()).toEqual(committed);
+  });
+
+  it('renders an accessible modal dialog and reacts to Intl changes', () => {
+    component.open();
+    fixture.detectChanges();
+    const dialog = document.querySelector('[role="dialog"]') as HTMLElement;
+    expect(dialog.getAttribute('aria-modal')).toBe('true');
+    expect(dialog.getAttribute('aria-label')).toBe('Choose date and time');
+
+    const intl = TestBed.inject(SdDatetimeIntl);
+    intl.dialogLabel = 'Chọn ngày và giờ';
+    intl.cancelLabel = 'Hủy';
+    intl.changes.next();
+    fixture.detectChanges();
+    expect(dialog.getAttribute('aria-label')).toBe('Chọn ngày và giờ');
+    expect(document.querySelectorAll('.sd-datetime-picker__default-actions button')[1].textContent).toContain('Hủy');
+  });
+
+  it('moves focus into the dialog and installs a focus trap', async () => {
+    component.open();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const dialog = document.querySelector('[role="dialog"]') as HTMLElement;
+    expect(dialog.contains(document.activeElement) || document.activeElement === dialog).toBe(true);
+    expect(document.querySelectorAll('.cdk-focus-trap-anchor')).toHaveLength(2);
+  });
+
+  it('uses a centered touch overlay class when touchUi is enabled', () => {
+    fixture.componentRef.setInput('touchUi', true);
+    fixture.detectChanges();
+    component.open();
+    fixture.detectChanges();
+    expect(document.querySelector('.sd-datetime-picker__overlay--touch')).not.toBeNull();
   });
 });
 
@@ -86,7 +137,7 @@ describe('SdDatetimePicker default actions fallback', () => {
 
   it('default Apply button emits applied with selected value and closes', () => {
     const selDate = new Date(2026, 4, 22, 14, 30, 0);
-    component.select(selDate);
+    component.setValue(selDate);
     component.open();
     fixture.detectChanges();
     const spy = jest.fn();
@@ -95,5 +146,28 @@ describe('SdDatetimePicker default actions fallback', () => {
     applyBtn.click();
     expect(spy).toHaveBeenCalledWith(selDate);
     expect(component.opened()).toBe(false);
+  });
+});
+
+class TestDatetimeIntl extends SdDatetimeIntl {
+  override dialogLabel = 'Custom dialog label';
+  override applyLabel = 'Confirm';
+}
+
+describe('SdDatetimePicker custom Intl provider', () => {
+  it('uses labels from a custom SdDatetimeIntl provider', () => {
+    TestBed.configureTestingModule({
+      imports: [SdDatetimePicker],
+      providers: [
+        provideSdNativeDateAdapter(),
+        { provide: SdDatetimeIntl, useClass: TestDatetimeIntl },
+      ],
+    });
+    const fixture = TestBed.createComponent(SdDatetimePicker<Date>);
+    fixture.detectChanges();
+    fixture.componentInstance.open();
+    fixture.detectChanges();
+    expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe('Custom dialog label');
+    expect(document.querySelectorAll('.sd-datetime-picker__default-actions button')[2].textContent).toContain('Confirm');
   });
 });

@@ -6,17 +6,31 @@
 .sd-datetime-picker__panel {
   display: flex;
   flex-direction: column;
-  width: 320px;
+  width: min(320px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
   background: var(--mat-sys-surface-container);
   border-radius: 12px;
   box-shadow: var(--mat-sys-level3);
-  overflow: hidden;
+  overflow: auto;
   animation: sd-picker-enter 0.18s ease-out;
+}
+
+.sd-datetime-picker__overlay--touch .sd-datetime-picker__panel {
+  width: min(360px, calc(100vw - 16px));
 }
 
 @keyframes sd-picker-enter {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-datetime-picker__panel { animation: none; }
+}
+
+@media (forced-colors: active) {
+  .sd-datetime-picker__panel { border: 1px solid CanvasText; }
 }
 
 // Compact MatCalendar inside our panel
