@@ -128,7 +128,7 @@ function formatLocalDatetime(value: Date): string {
     .hero {
       position: relative;
       overflow: hidden;
-      border-bottom: 1px solid var(--mat-sys-outline-variant);
+      border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 58%, transparent);
       background:
         radial-gradient(circle at 86% 10%, color-mix(in srgb, var(--mat-sys-primary-container) 88%, transparent) 0, transparent 35%),
         radial-gradient(circle at 54% 90%, color-mix(in srgb, var(--mat-sys-tertiary) 7%, transparent) 0, transparent 28%),
@@ -223,9 +223,9 @@ function formatLocalDatetime(value: Date): string {
       width: min(100%, 540px);
       margin-left: auto;
       padding: 18px;
-      border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 84%, transparent);
+      border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 72%, transparent);
       border-radius: 28px;
-      background: color-mix(in srgb, var(--mat-sys-surface-container-lowest) 96%, transparent);
+      background: var(--mat-sys-surface-container-lowest);
       box-shadow: var(--mat-sys-level3);
     }
 
@@ -261,9 +261,9 @@ function formatLocalDatetime(value: Date): string {
 
     .inline-picker {
       overflow: hidden;
-      border: 1px solid var(--mat-sys-outline-variant);
+      border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 76%, transparent);
       border-radius: 22px;
-      background: var(--mat-sys-surface-container);
+      background: var(--mat-sys-surface-container-lowest);
       box-shadow: var(--mat-sys-level1);
     }
 
@@ -275,8 +275,9 @@ function formatLocalDatetime(value: Date): string {
 
     .inline-picker sd-time-spinner {
       min-height: 100px;
-      border-top: 1px solid var(--mat-sys-outline-variant);
-      border-bottom: 1px solid var(--mat-sys-outline-variant);
+      border-top: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 62%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 62%, transparent);
+      background: var(--mat-sys-surface-container-low);
     }
 
     .preview-actions {
