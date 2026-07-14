@@ -8,243 +8,275 @@ import { CodeBlockComponent } from '../code-block.component';
   template: `
     <section id="theming" class="section">
       <div class="section-inner">
-        <h2 class="section-title">Theming</h2>
-        <p class="section-desc">
-          The library works out-of-the-box with both Material 2 and Material 3 themes.
-          For best visual harmony, use Material 3.
-        </p>
+        <div class="section-intro">
+          <p class="section-eyebrow">Design system</p>
+          <h2 class="section-title">Material 3 theming</h2>
+          <p class="section-desc">
+            This library is M3-only. It consumes Angular Material system tokens directly, so the picker inherits
+            your application palette, surface hierarchy, contrast, and theme mode without a separate color API.
+          </p>
+        </div>
 
-        <div class="theming-grid">
-          <!-- Comparison table -->
-          <div class="table-wrapper">
-            <table class="theming-table">
-              <thead>
-                <tr>
-                  <th>Feature</th>
-                  <th>Material 3 (recommended)</th>
-                  <th>Material 2 (legacy)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Setup</td>
-                  <td><code>mat.theme(...)</code></td>
-                  <td><code>mat.core() + mat.all-component-themes($theme)</code></td>
-                </tr>
-                <tr>
-                  <td>Color tokens</td>
-                  <td>Reads <code>--mat-sys-surface-container</code>, <code>--mat-sys-primary</code>, <code>--mat-sys-outline-variant</code>, <code>--mat-sys-on-surface-variant</code></td>
-                  <td>Falls back to neutral defaults (<code>#fff</code> surface, <code>#1976d2</code> primary)</td>
-                </tr>
-                <tr>
-                  <td>Dark mode</td>
-                  <td>Automatic via system tokens</td>
-                  <td>Requires manual palette override</td>
-                </tr>
-                <tr>
-                  <td>Picker chrome</td>
-                  <td>Follows your app theme automatically</td>
-                  <td>Neutral defaults unless custom override</td>
-                </tr>
-                <tr>
-                  <td>Hybrid M2+M3</td>
-                  <td colspan="2">Supported — picker prefers M3 tokens when present</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="theming-details">
-            <div class="theming-card">
-              <h3 class="theming-card-title">
-                <span class="badge badge-purple">M3</span>
-                Material 3 (Recommended)
-              </h3>
-              <p>
-                The picker reads the following CSS custom properties that Material 3 defines automatically:
-              </p>
-              <ul>
-                <li><code>--mat-sys-surface-container</code> — overlay background</li>
-                <li><code>--mat-sys-primary</code> — accent color (selected day, time spinner highlight)</li>
-                <li><code>--mat-sys-outline-variant</code> — divider between calendar and time spinner</li>
-                <li><code>--mat-sys-on-surface-variant</code> — secondary text</li>
-              </ul>
-              <p>Colors automatically follow your app's palette, including dark mode.</p>
-              <app-code [source]="m3Setup" lang="scss"></app-code>
+        <div class="theming-layout">
+          <article class="theming-card theming-card-featured">
+            <div class="card-heading">
+              <div>
+                <p class="card-kicker">Foundation</p>
+                <h3>Apply your application theme</h3>
+                <p>Include <code>mat.theme</code> at the document root so system variables are available to overlays.</p>
+              </div>
             </div>
+            <app-code [source]="m3Setup" lang="scss"></app-code>
+          </article>
 
-            <div class="theming-card">
-              <h3 class="theming-card-title">
-                <span class="badge badge-blue">M2</span>
-                Material 2 (Legacy)
-              </h3>
-              <p>
-                The M3 tokens are not defined in a Material 2 setup, so the picker falls back to neutral defaults:
-              </p>
-              <ul>
-                <li>Surface: <code>#fff</code></li>
-                <li>Primary: <code>#1976d2</code></li>
-                <li>Outline: <code>#e0e0e0</code></li>
-              </ul>
-              <p>
-                All Material primitives inside the picker (<code>&lt;mat-calendar&gt;</code>, icon buttons, flat buttons)
-                are still themed by Angular Material itself. Only the picker's own chrome uses the fallback colors.
-              </p>
-              <p>For custom palette override in M2, target the host class:</p>
-              <app-code [source]="m2Override" lang="scss"></app-code>
+          <article class="theming-card token-card">
+            <div class="card-heading">
+              <div>
+                <p class="card-kicker">Reference</p>
+                <h3>System tokens used</h3>
+                <p>The picker stays visually aligned with the rest of your Angular Material application.</p>
+              </div>
             </div>
-          </div>
+            <dl class="token-list">
+              <div>
+                <dt><code>--mat-sys-surface-container</code></dt>
+                <dd>Picker and time-spinner surfaces</dd>
+              </div>
+              <div>
+                <dt><code>--mat-sys-primary</code></dt>
+                <dd>Selection and active controls</dd>
+              </div>
+              <div>
+                <dt><code>--mat-sys-outline-variant</code></dt>
+                <dd>Dividers and subtle boundaries</dd>
+              </div>
+              <div>
+                <dt><code>--mat-sys-on-surface-variant</code></dt>
+                <dd>Supporting labels and secondary text</dd>
+              </div>
+            </dl>
+          </article>
+
+          <article class="theming-card">
+            <div class="card-heading">
+              <div>
+                <p class="card-kicker">Scoped override</p>
+                <h3>Customize with scoped tokens</h3>
+                <p>Override system values on the picker overlay panel when one context needs a distinct treatment.</p>
+              </div>
+            </div>
+            <app-code [source]="tokenCustomization" lang="scss"></app-code>
+          </article>
+
+          <article class="theming-card dark-card">
+            <div class="card-heading">
+              <div>
+                <p class="card-kicker">Theme mode</p>
+                <h3>Dark theme compatibility</h3>
+                <p>Generate a dark M3 theme on your theme class. The overlay follows the active system tokens automatically.</p>
+              </div>
+            </div>
+            <app-code [source]="darkTheme" lang="scss"></app-code>
+            <p class="theme-note">
+              Keep the theme class on a shared ancestor of the application and CDK overlay container so popup content receives the same token set.
+            </p>
+          </article>
         </div>
       </div>
     </section>
   `,
   styles: [`
     .section {
-      padding: 64px 24px;
+      padding: 88px 24px 96px;
+      background: var(--mat-sys-surface);
     }
 
     .section-inner {
-      max-width: 1120px;
+      max-width: 1184px;
       margin: 0 auto;
     }
 
+    .section-intro {
+      max-width: 780px;
+      margin-bottom: 48px;
+    }
+
+    .section-eyebrow {
+      margin: 0 0 10px;
+      color: var(--mat-sys-primary);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
     .section-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin: 0 0 8px;
+      margin: 0 0 12px;
+      color: var(--mat-sys-on-surface);
+      font-size: clamp(32px, 4vw, 46px);
+      font-weight: 750;
+      letter-spacing: -.025em;
+      line-height: 1.12;
     }
 
     .section-desc {
-      font-size: 16px;
-      color: #555;
-      margin: 0 0 40px;
+      margin: 0;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 17px;
+      line-height: 1.7;
     }
 
-    .theming-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      background: #fff;
-    }
-
-    .theming-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
-    .theming-table th {
-      background: #f5f5f5;
-      padding: 12px 16px;
-      text-align: left;
-      font-weight: 600;
-      color: #333;
-      border-bottom: 2px solid #e0e0e0;
-    }
-
-    .theming-table td {
-      padding: 11px 16px;
-      border-bottom: 1px solid #f0f0f0;
-      vertical-align: top;
-      color: #444;
-      line-height: 1.5;
-    }
-
-    .theming-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    .theming-table code {
-      background: #f1f3f4;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 12px;
-      color: #c62828;
-      font-family: 'Roboto Mono', monospace;
-    }
-
-    .theming-details {
+    .theming-layout {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
     }
 
     .theming-card {
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 24px;
+      min-width: 0;
+      padding: 26px;
+      border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 74%, transparent);
+      border-radius: 24px;
+      background: var(--mat-sys-surface-container-lowest);
+      box-shadow: var(--mat-sys-level1);
     }
 
-    .theming-card-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #1a1a1a;
-      margin: 0 0 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .theming-card-featured {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--mat-sys-primary-container), var(--mat-sys-surface-container-lowest) 70%);
     }
 
-    .theming-card p {
+    .token-card {
+      grid-column: 1 / -1;
+    }
+
+    .card-heading {
+      margin-bottom: 22px;
+    }
+
+    .card-kicker {
+      margin: 0 0 8px;
+      color: var(--mat-sys-primary);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .card-heading h3 {
+      margin: 0 0 6px;
+      color: var(--mat-sys-on-surface);
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+
+    .card-heading p,
+    .theme-note {
+      margin: 0;
+      color: var(--mat-sys-on-surface-variant);
       font-size: 14px;
-      color: #555;
-      margin: 0 0 12px;
       line-height: 1.6;
     }
 
-    .theming-card ul {
-      margin: 0 0 12px;
-      padding-left: 20px;
+    code {
+      padding: 2px 5px;
+      border-radius: 6px;
+      background: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
+      font-size: .9em;
     }
 
-    .theming-card li {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 4px;
-      line-height: 1.5;
+    .token-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      margin: 0;
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 16px;
+      background: var(--mat-sys-outline-variant);
     }
 
-    .theming-card code {
-      background: #f1f3f4;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 12px;
-      color: #c62828;
-      font-family: 'Roboto Mono', monospace;
+    .token-list div {
+      padding: 14px 16px;
+      background: var(--mat-sys-surface-container-low);
     }
 
-    .badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
+    .token-list dt {
+      margin-bottom: 5px;
+      overflow-wrap: anywhere;
     }
 
-    .badge-blue { background: #e3f0fd; color: #1565c0; }
-    .badge-purple { background: #f3e5f5; color: #7b1fa2; }
+    .token-list dd {
+      margin: 0;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 13px;
+    }
+
+    .theme-note {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--mat-sys-tertiary-container);
+      color: var(--mat-sys-on-tertiary-container);
+    }
+
+    .theming-card app-code {
+      display: block;
+      min-width: 0;
+    }
+
+    @media (max-width: 820px) {
+      .theming-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .theming-card-featured {
+        grid-column: auto;
+      }
+
+      .token-card {
+        grid-column: auto;
+      }
+    }
 
     @media (max-width: 600px) {
-      .section { padding: 40px 16px; }
-      .section-title { font-size: 24px; }
-      .theming-details { grid-template-columns: 1fr; }
+      .section {
+        padding: 64px 16px 72px;
+      }
+
+      .section-intro {
+        margin-bottom: 36px;
+      }
+
+      .section-desc {
+        font-size: 16px;
+      }
+
+      .theming-layout {
+        gap: 18px;
+      }
+
+      .theming-card {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .token-list {
+        grid-template-columns: 1fr;
+      }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThemingComponent {
-  readonly m3Setup = `// In your styles.scss
+  readonly m3Setup = `// styles.scss
 @use '@angular/material' as mat;
 
 html {
+  color-scheme: light;
+
   @include mat.theme((
     color: (
       primary: mat.$azure-palette,
@@ -255,9 +287,21 @@ html {
   ));
 }`;
 
-  readonly m2Override = `// Override picker chrome in Material 2
-.sd-datetime-picker__overlay {
-  --sd-picker-surface: #your-surface-color;
-  --sd-picker-primary: #your-primary-color;
+  readonly tokenCustomization = `.sd-datetime-picker__overlay {
+  --mat-sys-primary: #2859a8;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-surface-container: #f2f5fc;
+  --mat-sys-outline-variant: #c3c6d0;
+}`;
+
+  readonly darkTheme = `.dark-theme {
+  color-scheme: dark;
+
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      theme-type: dark,
+    ),
+  ));
 }`;
 }

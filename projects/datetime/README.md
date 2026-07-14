@@ -73,6 +73,7 @@ export class ExampleComponent {
   #picker
   [showSeconds]="true"
   [stepMinute]="5"
+  [touchUi]="false"
   [disabled]="false"
   [minDate]="minDate"
   [maxDate]="maxDate"
@@ -85,17 +86,26 @@ export class ExampleComponent {
 | Input | Type | Default | Description |
 | --- | --- | --- | --- |
 | `showSeconds` | `boolean` | `false` | Shows the seconds column. |
-| `stepMinute` | `number` | `1` | Minute increment/decrement step. |
+| `stepMinute` | `number` | `1` | Strict minute step; invalid configuration normalizes to `1`. |
+| `touchUi` | `boolean` | `false` | Uses a centered, viewport-constrained overlay. |
 | `disabled` | `boolean` | `false` | Prevents opening the picker. |
-| `minDate` | `D \| null` | `null` | Minimum selectable datetime. |
-| `maxDate` | `D \| null` | `null` | Maximum selectable datetime. |
+| `minDate` | `D \| null` | `null` | Inclusive minimum full datetime. |
+| `maxDate` | `D \| null` | `null` | Inclusive maximum full datetime. |
 | `startAt` | `D \| null` | `null` | Initial calendar date/month. |
 
 | Output | Payload | Description |
 | --- | --- | --- |
 | `applied` | `D` | Fires when Apply is clicked. |
 | `cleared` | `void` | Fires when the picker is cleared. |
-| `closed` | `void` | Fires after the overlay closes. |
+| `closed` | `SdDatetimeCloseReason` | Fires with the close reason after the overlay closes. |
+
+The input directive exposes `sdDatetimeParse`, `sdDatetimeMin`, `sdDatetimeMax`, and `sdDatetimeMinuteStep` Angular validation errors.
+
+## Defaults and internationalization
+
+Provide `SD_DATETIME_DEFAULT_OPTIONS` to configure `showSeconds`, `stepMinute`, and `touchUi` globally. Explicit component inputs take precedence.
+
+Provide a subclass of `SdDatetimeIntl` to translate dialog, action, spinner, and increment/decrement labels. Call `changes.next()` after updating labels at runtime.
 
 ## Custom Actions
 
@@ -145,16 +155,19 @@ Custom adapters can extend `SdDateAdapter<D>` when an application needs another 
 | --- | --- |
 | `@angular/core` | `>=19.0.0 <22.0.0` |
 | `@angular/common` | `>=19.0.0 <22.0.0` |
+| `@angular/forms` | `>=19.0.0 <22.0.0` |
 | `@angular/material` | `>=19.0.0 <22.0.0` |
 | `@angular/cdk` | `>=19.0.0 <22.0.0` |
 | `rxjs` | `^7.0.0` |
+
+Angular 19, 20, and 21 are verified with clean production consumer builds that install the packed Angular Package Format output.
 
 ## Related Packages
 
 - `@sdcorejs/angular-material-datetime-moment`
 - `@sdcorejs/angular-material-datetime-date-fns`
 
-The related adapter packages are version-aligned with this package.
+These package names are placeholders with empty public APIs and are excluded from the current release workflow.
 
 ## License
 

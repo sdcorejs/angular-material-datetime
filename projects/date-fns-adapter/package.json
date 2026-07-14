@@ -1,17 +1,26 @@
 {
   "name": "@sdcorejs/angular-material-datetime-date-fns",
   "version": "1.0.2",
-  "description": "date-fns date adapter for @sdcorejs/angular-material-datetime",
+  "description": "Placeholder package — runtime date-fns adapter is not implemented yet.",
+  "author": {
+    "name": "Trần Thuận Nghĩa",
+    "email": "tran.thuan.nghia@gmail.com",
+    "url": "https://github.com/sdcorejs"
+  },
+  "homepage": "https://sdcorejs.github.io/angular-material-datetime/",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sdcorejs/angular-material-datetime.git",
     "directory": "projects/date-fns-adapter"
   },
+  "keywords": [
+    "angular",
+    "angular-material",
+    "material-3",
+    "datetime-picker",
+    "date-fns"
+  ],
   "sideEffects": false,
-  "peerDependencies": {
-    "@angular/core": ">=19.0.0 <22.0.0",
-    "@sdcorejs/angular-material-datetime": "^1.0.0",
-    "date-fns": ">=3.0.0"
-  }
+  "peerDependencies": {}
 }

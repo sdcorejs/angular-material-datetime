@@ -1,169 +1,422 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCalendar } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import {
+  SdDatetimePicker,
+  SdDatetimePickerInput,
+  SdDatetimePickerToggle,
+  SdTimeSpinner,
+} from '@sdcorejs/angular-material-datetime';
 import { CodeBlockComponent } from '../code-block.component';
+
+const INITIAL_PREVIEW_VALUE = new Date(2026, 6, 14, 10, 30, 0);
+
+function cloneDate(value: Date): Date {
+  return new Date(value.getTime());
+}
+
+function formatLocalDatetime(value: Date): string {
+  const pad = (part: number): string => String(part).padStart(2, '0');
+  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}T${pad(value.getHours())}:${pad(value.getMinutes())}`;
+}
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CodeBlockComponent],
+  imports: [
+    DatePipe,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatCalendar,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    SdDatetimePicker,
+    SdDatetimePickerInput,
+    SdDatetimePickerToggle,
+    SdTimeSpinner,
+    CodeBlockComponent,
+  ],
   template: `
-    <section class="hero">
+    <section class="hero" aria-labelledby="hero-title">
       <div class="hero-inner">
-        <img src="brand/logo-text.png" alt="SDCoreJS" class="hero-logo">
-        <h1 class="hero-heading">Angular Material Datetime</h1>
-        <p class="hero-sub">
-          Datetime, timepicker, and date-range picker for Angular Material —
-          adapter-pluggable, signal-driven, Material 3-ready.
-        </p>
+        <div class="hero-copy">
+          <p class="hero-eyebrow">Angular Material 19–21 · Material 3</p>
+          <h1 id="hero-title" class="hero-heading">A datetime picker that speaks Material 3.</h1>
+          <p class="hero-lead">
+            Calendar and time controls for Angular, with strict forms integration, accessible interactions,
+            and an adapter-pluggable core.
+          </p>
 
-        <div class="hero-badges">
-          <span class="badge badge-blue">Angular 19+</span>
-          <span class="badge badge-purple">Material 19+</span>
-          <span class="badge badge-green">MIT License</span>
+          <div class="install-block">
+            <span class="install-label">Install the core package</span>
+            <app-code [source]="installCmd" lang="bash"></app-code>
+          </div>
+
+          <div class="hero-actions">
+            <a class="hero-button hero-button-primary" href="#examples">Try live examples</a>
+            <a class="hero-button hero-button-secondary" href="https://github.com/sdcorejs/angular-material-datetime" target="_blank" rel="noopener noreferrer">
+              View on GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="capabilities" aria-label="Package capabilities">
+            <span>Angular 19–21</span>
+            <span>Reactive forms</span>
+            <span>Accessible dialog</span>
+            <span>Adapter-pluggable</span>
+          </div>
         </div>
 
-        <div class="hero-install">
-          <app-code [source]="installCmd" lang="bash"></app-code>
-        </div>
+        <div class="preview-stage" aria-label="Interactive datetime picker workbench">
+          <div class="preview-shell">
+            <div class="preview-head">
+              <strong>Live preview</strong>
+              <span>Material 3</span>
+            </div>
 
-        <div class="hero-actions">
-          <a
-            class="hero-btn hero-btn-primary"
-            href="https://github.com/sdcorejs/angular-material-datetime"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-            </svg>
-            View on GitHub
-          </a>
-          <a
-            class="hero-btn hero-btn-secondary"
-            href="https://www.npmjs.com/package/@sdcorejs/angular-material-datetime"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M0 7.334v8h6.666v1.332H12v-1.332h12v-8H0zm6.666 6.664H5.334v-4H3.999v4H1.335V8.667h5.331v5.331zm4 0v1.336H8.001V8.667h5.334v5.331h-2.669zm12.001 0h-1.33v-4h-1.336v4h-1.335v-4h-1.33v4h-2.671V8.667h8.002v5.331z"/>
-              <path d="M10.665 10h1.336v2.667h-1.336z"/>
-            </svg>
-            View on npm
-          </a>
+            <mat-form-field appearance="outline" class="preview-field" subscriptSizing="dynamic">
+              <mat-label>Selected datetime</mat-label>
+              <input matInput readonly [sdDatetimePicker]="heroPicker" [formControl]="previewControl">
+              <button matSuffix mat-icon-button [sdDatetimePickerToggle]="heroPicker" aria-label="Open interactive datetime picker">
+                <mat-icon>event</mat-icon>
+              </button>
+              <sd-datetime-picker
+                #heroPicker
+                [startAt]="committedValue()"
+                (applied)="handlePickerApplied($event)"
+              ></sd-datetime-picker>
+            </mat-form-field>
+
+            <div class="inline-picker" aria-label="Always-visible datetime controls">
+              <mat-calendar
+                [selected]="draftValue()"
+                [startAt]="draftValue()"
+                (selectedChange)="selectPreviewDate($event)"
+              ></mat-calendar>
+              <sd-time-spinner
+                [value]="draftValue()"
+                [baseValue]="draftValue()"
+                (valueChange)="selectPreviewTime($event)"
+              ></sd-time-spinner>
+              <div class="preview-actions">
+                <button mat-button type="button" (click)="setPreviewToNow()">
+                  <mat-icon>schedule</mat-icon>
+                  Now
+                </button>
+                <button mat-button type="button" (click)="resetPreviewDraft()">Cancel</button>
+                <button mat-flat-button type="button" (click)="applyPreviewDraft()">Apply</button>
+              </div>
+            </div>
+
+            <div class="preview-value" aria-live="polite">
+              <span>Committed value</span>
+              <code>{{ committedIso() }}</code>
+            </div>
+            <p class="preview-readable">{{ committedValue() | date:'MMM d, y, h:mm a' }}</p>
+          </div>
         </div>
       </div>
     </section>
   `,
   styles: [`
     .hero {
-      background: linear-gradient(135deg, #f5f7fa 0%, #fff 60%, #e8f0fe 100%);
-      padding: 80px 24px 64px;
-      text-align: center;
-      border-bottom: 1px solid #e8eaed;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+      background:
+        radial-gradient(circle at 86% 10%, color-mix(in srgb, var(--mat-sys-primary-container) 88%, transparent) 0, transparent 35%),
+        radial-gradient(circle at 54% 90%, color-mix(in srgb, var(--mat-sys-tertiary) 7%, transparent) 0, transparent 28%),
+        var(--mat-sys-surface-container-low);
     }
 
     .hero-inner {
-      max-width: 720px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      max-width: 1200px;
+      min-height: 720px;
       align-items: center;
-      gap: 20px;
+      gap: clamp(42px, 7vw, 92px);
+      margin: 0 auto;
+      padding: 56px 24px 64px;
+      grid-template-columns: minmax(0, .92fr) minmax(480px, 1.08fr);
     }
 
-    .hero-logo {
-      height: 64px;
-      width: auto;
+    .hero-copy,
+    .preview-stage,
+    .preview-shell {
+      min-width: 0;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 18px;
+      color: var(--mat-sys-primary);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .hero-eyebrow::before {
+      width: 8px;
+      height: 8px;
+      border: 4px solid var(--mat-sys-primary-container);
+      border-radius: 50%;
+      background: var(--mat-sys-primary);
+      content: '';
     }
 
     .hero-heading {
+      max-width: 610px;
       margin: 0;
-      font-size: 40px;
-      font-weight: 700;
-      color: #1a1a1a;
-      letter-spacing: -0.5px;
+      color: var(--mat-sys-on-surface);
+      font-size: clamp(46px, 5vw, 70px);
+      font-weight: 780;
+      letter-spacing: -.05em;
+      line-height: 1.01;
     }
 
-    .hero-sub {
-      margin: 0;
+    .hero-lead {
+      max-width: 620px;
+      margin: 24px 0 26px;
+      color: var(--mat-sys-on-surface-variant);
       font-size: 18px;
-      color: #555;
-      line-height: 1.6;
-      max-width: 580px;
+      line-height: 1.65;
     }
 
-    .hero-badges {
+    .install-block {
+      max-width: 620px;
+      min-width: 0;
+    }
+
+    .install-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .preview-stage {
+      position: relative;
+    }
+
+    .preview-stage::before {
+      position: absolute;
+      z-index: 0;
+      inset: 12% -8% -5% 18%;
+      border-radius: 48px;
+      background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--mat-sys-primary) 7%, transparent) 0 12px, transparent 12px 24px);
+      content: '';
+    }
+
+    .preview-shell {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 540px);
+      margin-left: auto;
+      padding: 18px;
+      border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 84%, transparent);
+      border-radius: 28px;
+      background: color-mix(in srgb, var(--mat-sys-surface-container-lowest) 96%, transparent);
+      box-shadow: var(--mat-sys-level3);
+    }
+
+    .preview-head,
+    .preview-value {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-    }
-
-    .badge-blue { background: #e3f0fd; color: #1565c0; }
-    .badge-purple { background: #f3e5f5; color: #7b1fa2; }
-    .badge-green { background: #e8f5e9; color: #2e7d32; }
-
-    .hero-install {
-      width: 100%;
-      max-width: 420px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .hero-btn {
-      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all .18s;
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    .hero-btn-primary {
-      background: #1976d2;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(25,118,210,.25);
+    .preview-head {
+      margin-bottom: 12px;
+      color: var(--mat-sys-on-surface);
+      font-size: 13px;
+      font-weight: 800;
     }
 
-    .hero-btn-primary:hover {
-      background: #1565c0;
-      box-shadow: 0 4px 12px rgba(25,118,210,.35);
+    .preview-head span {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+      font-size: 10px;
+      letter-spacing: .07em;
+      text-transform: uppercase;
     }
 
-    .hero-btn-secondary {
-      background: #fff;
-      color: #1976d2;
-      border: 1.5px solid #1976d2;
+    .preview-field {
+      width: 100%;
+      margin-bottom: 10px;
     }
 
-    .hero-btn-secondary:hover {
-      background: #e3f0fd;
+    .inline-picker {
+      overflow: hidden;
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 22px;
+      background: var(--mat-sys-surface-container);
+      box-shadow: var(--mat-sys-level1);
     }
 
-    @media (max-width: 600px) {
-      .hero { padding: 48px 16px 40px; }
-      .hero-heading { font-size: 28px; }
-      .hero-sub { font-size: 15px; }
+    .inline-picker mat-calendar {
+      display: block;
+      width: 100%;
+      background: var(--mat-sys-surface-container-lowest);
     }
+
+    .inline-picker sd-time-spinner {
+      min-height: 100px;
+      border-top: 1px solid var(--mat-sys-outline-variant);
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+    }
+
+    .preview-actions {
+      display: flex;
+      min-height: 56px;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      padding: 8px 10px;
+      background: var(--mat-sys-surface-container-lowest);
+    }
+
+    .preview-actions button:first-child {
+      margin-right: auto;
+    }
+
+    .preview-actions mat-icon {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+    }
+
+    .preview-value {
+      padding: 14px 4px 0;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 12px;
+    }
+
+    .preview-value code {
+      color: var(--mat-sys-tertiary);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1023px) {
+      .hero-inner {
+        min-height: 0;
+        grid-template-columns: 1fr;
+      }
+
+      .preview-shell {
+        width: min(100%, 620px);
+        margin: 0;
+      }
+
+      .preview-stage::before {
+        inset: 8% 4% -4% 16%;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .hero-inner {
+        gap: 34px;
+        padding: 42px 16px 54px;
+      }
+
+      .hero-heading {
+        font-size: clamp(36px, 12vw, 52px);
+      }
+
+      .hero-lead {
+        margin-block: 20px;
+        font-size: 16px;
+      }
+
+      .preview-stage::before {
+        display: none;
+      }
+
+      .preview-shell {
+        padding: 12px;
+        border-radius: 22px;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .hero-inner {
+        padding-inline: 14px;
+      }
+
+      .hero-eyebrow {
+        align-items: flex-start;
+        font-size: 11px;
+      }
+
+      .preview-head,
+      .preview-value {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .preview-actions {
+        flex-wrap: wrap;
+      }
+
+      .preview-actions button:first-child {
+        margin-right: 0;
+      }
+
+    }
+
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroComponent {
   readonly installCmd = `npm install @sdcorejs/angular-material-datetime`;
+  readonly previewControl = new FormControl<Date | null>(cloneDate(INITIAL_PREVIEW_VALUE));
+  protected readonly committedValue = signal(cloneDate(INITIAL_PREVIEW_VALUE));
+  protected readonly draftValue = signal(cloneDate(INITIAL_PREVIEW_VALUE));
+  protected readonly committedIso = computed(() => formatLocalDatetime(this.committedValue()));
+
+  protected selectPreviewDate(date: Date | null): void {
+    if (date == null) return;
+    const current = this.draftValue();
+    const next = cloneDate(date);
+    next.setHours(current.getHours(), current.getMinutes(), current.getSeconds(), 0);
+    this.draftValue.set(next);
+  }
+
+  protected selectPreviewTime(value: Date): void {
+    this.draftValue.set(cloneDate(value));
+  }
+
+  protected setPreviewToNow(): void {
+    this.draftValue.set(new Date());
+  }
+
+  protected resetPreviewDraft(): void {
+    this.draftValue.set(cloneDate(this.committedValue()));
+  }
+
+  protected applyPreviewDraft(): void {
+    const committed = cloneDate(this.draftValue());
+    this.committedValue.set(committed);
+    this.previewControl.setValue(cloneDate(committed));
+  }
+
+  protected handlePickerApplied(value: Date): void {
+    const committed = cloneDate(value);
+    this.committedValue.set(committed);
+    this.draftValue.set(cloneDate(committed));
+  }
 }

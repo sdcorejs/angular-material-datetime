@@ -1,19 +1,21 @@
 import { InjectionToken } from '@angular/core';
 
-export interface SdDateFormats {
+export interface SdDateFormats<F = unknown> {
   parse: {
-    dateInput: string;
-    datetimeInput: string;
-    timeInput: string;
+    dateInput: F;
+    datetimeInput: F;
+    timeInput: F;
   };
   display: {
-    dateInput: string;
-    datetimeInput: string;
-    timeInput: string;
-    monthYearLabel: string;
-    dateA11yLabel: string;
-    monthYearA11yLabel: string;
-    popupHeaderDateLabel: string;
+    dateInput: F;
+    datetimeInput: F;
+    datetimeInputWithSeconds?: F;
+    timeInput: F;
+    timeInputWithSeconds?: F;
+    monthYearLabel: F;
+    dateA11yLabel: F;
+    monthYearA11yLabel: F;
+    popupHeaderDateLabel: F;
   };
 }
 

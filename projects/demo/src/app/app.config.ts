@@ -9,21 +9,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideSdNativeDateAdapter({
-      parse: {
-        dateInput: 'M/d/yyyy',
-        datetimeInput: 'M/d/yyyy h:mm a',
-        timeInput: 'h:mm a',
-      },
-      display: {
-        dateInput: 'M/d/yyyy',
-        datetimeInput: 'M/d/yyyy h:mm a',
-        timeInput: 'h:mm a',
-        monthYearLabel: 'MMM yyyy',
-        dateA11yLabel: 'longDate',
-        monthYearA11yLabel: 'MMMM yyyy',
-        popupHeaderDateLabel: 'EEE, MMM d',
-      },
-    }),
+    provideSdNativeDateAdapter(),
   ],
 };

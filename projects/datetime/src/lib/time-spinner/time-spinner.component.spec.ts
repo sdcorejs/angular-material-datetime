@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideSdNativeDateAdapter } from '../native/provide-native';
+import { SdNativeDateAdapter } from '../native/native-date-adapter';
 import { SdTimeSpinner } from './time-spinner.component';
 
 describe('SdTimeSpinner', () => {
@@ -6,7 +8,10 @@ describe('SdTimeSpinner', () => {
   let component: SdTimeSpinner;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [SdTimeSpinner],
+      providers: [provideSdNativeDateAdapter()],
+    }).compileComponents();
     fixture = TestBed.createComponent(SdTimeSpinner);
     component = fixture.componentInstance;
   });
@@ -35,12 +40,13 @@ describe('SdTimeSpinner', () => {
     expect(component.stepMinute()).toBe(1);
   });
 
-  it('defaults to hour=0, minute=0, second=0 when value is null', () => {
+  it('uses baseValue when value is null', () => {
     fixture.componentRef.setInput('value', null);
+    fixture.componentRef.setInput('baseValue', new Date(2031, 8, 9, 7, 12, 34));
     fixture.detectChanges();
-    expect(component.hour()).toBe(0);
-    expect(component.minute()).toBe(0);
-    expect(component.second()).toBe(0);
+    expect(component.hour()).toBe(7);
+    expect(component.minute()).toBe(12);
+    expect(component.second()).toBe(34);
   });
 
   it('parses value Date into hour/minute/second signals', () => {
@@ -57,7 +63,7 @@ describe('SdTimeSpinner step buttons', () => {
   let component: SdTimeSpinner;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner], providers: [provideSdNativeDateAdapter()] }).compileComponents();
     fixture = TestBed.createComponent(SdTimeSpinner);
     component = fixture.componentInstance;
   });
@@ -134,7 +140,7 @@ describe('SdTimeSpinner typing into a column', () => {
   let component: SdTimeSpinner;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner], providers: [provideSdNativeDateAdapter()] }).compileComponents();
     fixture = TestBed.createComponent(SdTimeSpinner);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 30, 0));
@@ -179,7 +185,7 @@ describe('SdTimeSpinner keydown digit-only filter', () => {
   let component: SdTimeSpinner;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner], providers: [provideSdNativeDateAdapter()] }).compileComponents();
     fixture = TestBed.createComponent(SdTimeSpinner);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -223,9 +229,46 @@ describe('SdTimeSpinner null-value fallback and #setUnit edge-cases', () => {
   let component: SdTimeSpinner;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner], providers: [provideSdNativeDateAdapter()] }).compileComponents();
     fixture = TestBed.createComponent(SdTimeSpinner);
     component = fixture.componentInstance;
+    jest.spyOn(TestBed.inject(SdNativeDateAdapter), 'today')
+      .mockReturnValue(new Date(2031, 8, 9, 0, 0, 0));
+  });
+
+  it.each([
+    ['ArrowUp', 'hour', 11],
+    ['ArrowDown', 'hour', 9],
+    ['Home', 'minute', 0],
+    ['End', 'second', 59],
+  ] as const)('handles %s for the %s spinbutton', (key, unit, expected) => {
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 10, 30, 20));
+    const emitted = jest.fn();
+    component.valueChange.subscribe(emitted);
+    const event = new KeyboardEvent('keydown', { key });
+    component.onSpinKeyDown(unit, event);
+    const value = emitted.mock.calls[0][0] as Date;
+    expect(unit === 'hour' ? value.getHours() : unit === 'minute' ? value.getMinutes() : value.getSeconds())
+      .toBe(expected);
+  });
+
+  it('ignores unrelated keys in spinbutton handling', () => {
+    const emitted = jest.fn();
+    component.valueChange.subscribe(emitted);
+    component.onSpinKeyDown('hour', new KeyboardEvent('keydown', { key: 'Tab' }));
+    expect(emitted).not.toHaveBeenCalled();
+  });
+
+  it('exposes spinbutton semantics for each visible time input', () => {
+    fixture.componentRef.setInput('showSeconds', true);
+    fixture.componentRef.setInput('value', new Date(2026, 4, 22, 14, 30, 15));
+    fixture.detectChanges();
+    const inputs = fixture.nativeElement.querySelectorAll('[role="spinbutton"]') as NodeListOf<HTMLInputElement>;
+    expect(inputs).toHaveLength(3);
+    expect(inputs[0].getAttribute('aria-valuemax')).toBe('23');
+    expect(inputs[0].getAttribute('aria-valuenow')).toBe('14');
+    expect(inputs[1].getAttribute('aria-valuenow')).toBe('30');
+    expect(inputs[2].getAttribute('aria-valuenow')).toBe('15');
   });
 
   // #step: value() is null → ใช้ fallback date แทน (branch ?? new Date(...))
@@ -299,7 +342,7 @@ describe('SdTimeSpinner display padding (focused vs unfocused)', () => {
   let component: SdTimeSpinner;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [SdTimeSpinner] }).compileComponents();
+    await TestBed.configureTestingModule({ imports: [SdTimeSpinner], providers: [provideSdNativeDateAdapter()] }).compileComponents();
     fixture = TestBed.createComponent(SdTimeSpinner);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('value', new Date(2026, 4, 22, 5, 30, 0));

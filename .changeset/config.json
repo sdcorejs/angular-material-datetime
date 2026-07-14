@@ -6,15 +6,12 @@
   ],
   "commit": false,
   "fixed": [],
-  "linked": [
-    [
-      "@sdcorejs/angular-material-datetime",
-      "@sdcorejs/angular-material-datetime-moment",
-      "@sdcorejs/angular-material-datetime-date-fns"
-    ]
-  ],
+  "linked": [],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "@sdcorejs/angular-material-datetime-moment",
+    "@sdcorejs/angular-material-datetime-date-fns"
+  ]
 }

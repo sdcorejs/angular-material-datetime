@@ -1,19 +1,30 @@
 <ng-template #panel>
-  <div class="sd-datetime-picker__panel" role="dialog" aria-label="Datetime picker">
+  <div
+    class="sd-datetime-picker__panel"
+    role="dialog"
+    aria-modal="true"
+    [id]="panelId"
+    [attr.aria-label]="intl.dialogLabel"
+    tabindex="-1"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+    cdkFocusInitial
+    (keydown.escape)="onEscape($event)">
     <mat-calendar
-      [selected]="$any(selected())"
-      [minDate]="$any(minDate())"
-      [maxDate]="$any(maxDate())"
-      [startAt]="$any(startAt())"
-      (selectedChange)="select($any($event))">
+      [selected]="selected()"
+      [minDate]="minDate()"
+      [maxDate]="maxDate()"
+      [startAt]="startAt()"
+      (selectedChange)="selectDatePart($event)">
     </mat-calendar>
 
     <sd-time-spinner
-      [value]="$any(selected())"
+      [value]="selected()"
+      [baseValue]="spinnerBaseValue()"
       [showSeconds]="showSeconds()"
       [stepMinute]="stepMinute()"
       [disabled]="disabledEffective()"
-      (valueChange)="select($any($event))">
+      (valueChange)="selectTimePart($event)">
     </sd-time-spinner>
 
     <ng-content select="sd-datetime-picker-actions">
@@ -21,10 +32,10 @@
       <div class="sd-datetime-picker__default-actions">
         <button mat-button type="button" class="sd-datetime-picker__default-now" (click)="now()">
           <mat-icon>schedule</mat-icon>
-          Now
+          {{ intl.nowLabel }}
         </button>
-        <button mat-button type="button" (click)="close()">Cancel</button>
-        <button mat-flat-button type="button" (click)="apply()">Apply</button>
+        <button mat-button type="button" (click)="cancel()">{{ intl.cancelLabel }}</button>
+        <button mat-flat-button type="button" [disabled]="!canApply()" (click)="apply()">{{ intl.applyLabel }}</button>
       </div>
     </ng-content>
   </div>

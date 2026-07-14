@@ -10,15 +10,16 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         <p class="section-desc">Complete list of inputs, outputs, and methods for the datetime picker components.</p>
 
         <!-- sd-datetime-picker inputs -->
-        <h3 class="sub-title"><code>&lt;sd-datetime-picker&gt;</code> Inputs</h3>
-        <div class="table-wrapper">
+        <h3 id="picker-inputs-title" class="sub-title"><code>&lt;sd-datetime-picker&gt;</code> Inputs</h3>
+        <p id="picker-inputs-hint" class="table-scroll-hint">Scroll to see all columns</p>
+        <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="picker-inputs-title" aria-describedby="picker-inputs-hint">
           <table class="api-table">
             <thead>
               <tr>
-                <th>Input</th>
-                <th>Type</th>
-                <th>Default</th>
-                <th>Description</th>
+                <th scope="col">Input</th>
+                <th scope="col">Type</th>
+                <th scope="col">Default</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -63,14 +64,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         </div>
 
         <!-- sd-datetime-picker outputs -->
-        <h3 class="sub-title"><code>&lt;sd-datetime-picker&gt;</code> Outputs</h3>
-        <div class="table-wrapper">
+        <h3 id="picker-outputs-title" class="sub-title"><code>&lt;sd-datetime-picker&gt;</code> Outputs</h3>
+        <p id="picker-outputs-hint" class="table-scroll-hint">Scroll to see all columns</p>
+        <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="picker-outputs-title" aria-describedby="picker-outputs-hint">
           <table class="api-table">
             <thead>
               <tr>
-                <th>Output</th>
-                <th>Payload</th>
-                <th>Description</th>
+                <th scope="col">Output</th>
+                <th scope="col">Payload</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -86,7 +88,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
               </tr>
               <tr>
                 <td><code>closed</code></td>
-                <td><code>void</code></td>
+                <td><code>SdDatetimeCloseReason</code></td>
                 <td>Emitted when the overlay closes</td>
               </tr>
             </tbody>
@@ -94,14 +96,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         </div>
 
         <!-- sd-datetime-picker methods -->
-        <h3 class="sub-title"><code>&lt;sd-datetime-picker&gt;</code> Methods</h3>
-        <div class="table-wrapper">
+        <h3 id="picker-methods-title" class="sub-title"><code>&lt;sd-datetime-picker&gt;</code> Methods</h3>
+        <p id="picker-methods-hint" class="table-scroll-hint">Scroll to see all columns</p>
+        <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="picker-methods-title" aria-describedby="picker-methods-hint">
           <table class="api-table">
             <thead>
               <tr>
-                <th>Method</th>
-                <th>Signature</th>
-                <th>Description</th>
+                <th scope="col">Method</th>
+                <th scope="col">Signature</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -140,13 +143,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         </div>
 
         <!-- sdDatetimePicker directive -->
-        <h3 class="sub-title"><code>[sdDatetimePicker]</code> Input Directive</h3>
-        <div class="table-wrapper">
+        <h3 id="input-directive-title" class="sub-title"><code>[sdDatetimePicker]</code> Input Directive</h3>
+        <p id="input-directive-hint" class="table-scroll-hint">Scroll to see all columns</p>
+        <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="input-directive-title" aria-describedby="input-directive-hint">
           <table class="api-table">
             <thead>
               <tr>
-                <th>Property</th>
-                <th>Details</th>
+                <th scope="col">Property</th>
+                <th scope="col">Details</th>
               </tr>
             </thead>
             <tbody>
@@ -163,13 +167,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
         </div>
 
         <!-- Supporting directives -->
-        <h3 class="sub-title">Supporting Directives &amp; Components</h3>
-        <div class="table-wrapper">
+        <h3 id="supporting-directives-title" class="sub-title">Supporting Directives &amp; Components</h3>
+        <p id="supporting-directives-hint" class="table-scroll-hint">Scroll to see all columns</p>
+        <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="supporting-directives-title" aria-describedby="supporting-directives-hint">
           <table class="api-table">
             <thead>
               <tr>
-                <th>Selector</th>
-                <th>Description</th>
+                <th scope="col">Selector</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -210,74 +215,99 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
   styles: [`
     .section {
-      padding: 64px 24px;
+      padding: 88px 24px 96px;
     }
 
     .section-alt {
-      background: #f8f9fa;
+      background: var(--mat-sys-surface-container-low);
     }
 
     .section-inner {
-      max-width: 1120px;
+      max-width: 1184px;
       margin: 0 auto;
     }
 
     .section-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin: 0 0 8px;
+      margin: 0 0 12px;
+      color: var(--mat-sys-on-surface);
+      font-size: clamp(32px, 4vw, 46px);
+      font-weight: 750;
+      letter-spacing: -.025em;
+      line-height: 1.12;
     }
 
     .section-desc {
-      font-size: 16px;
-      color: #555;
-      margin: 0 0 40px;
+      max-width: 760px;
+      margin: 0 0 44px;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 17px;
+      line-height: 1.65;
     }
 
     .sub-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: #333;
-      margin: 32px 0 12px;
+      margin: 40px 0 14px;
+      color: var(--mat-sys-on-surface);
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: -.01em;
     }
 
     .sub-title code {
-      font-size: 18px;
-      background: #e8eaed;
-      padding: 2px 8px;
-      border-radius: 4px;
+      padding: 4px 9px;
+      border-radius: 8px;
+      background: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
+      font-size: 17px;
     }
 
     .table-wrapper {
       overflow-x: auto;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      background: #fff;
+      border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 78%, transparent);
+      border-radius: 18px;
+      background: var(--mat-sys-surface-container-lowest);
+      box-shadow: var(--mat-sys-level1);
+      scrollbar-color: var(--mat-sys-outline-variant) transparent;
+    }
+
+    .table-wrapper:focus-visible {
+      outline: 3px solid var(--mat-sys-primary);
+      outline-offset: 3px;
+    }
+
+    .table-scroll-hint {
+      display: none;
+      margin: -4px 0 10px;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 13px;
+      font-weight: 650;
     }
 
     .api-table {
       width: 100%;
+      min-width: 680px;
       border-collapse: collapse;
       font-size: 14px;
     }
 
     .api-table th {
-      background: #f5f5f5;
-      padding: 12px 16px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+      background: var(--mat-sys-surface-container);
+      color: var(--mat-sys-on-surface);
       text-align: left;
-      font-weight: 600;
-      color: #333;
-      border-bottom: 2px solid #e0e0e0;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .055em;
+      text-transform: uppercase;
       white-space: nowrap;
     }
 
     .api-table td {
-      padding: 11px 16px;
-      border-bottom: 1px solid #f0f0f0;
+      padding: 14px 18px;
+      border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 58%, transparent);
+      color: var(--mat-sys-on-surface-variant);
       vertical-align: top;
-      color: #444;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .api-table tbody tr:last-child td {
@@ -285,21 +315,45 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     }
 
     .api-table tbody tr:hover td {
-      background: #fafafa;
+      background: var(--mat-sys-surface-container-low);
     }
 
     .api-table code {
-      background: #f1f3f4;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 3px 7px;
+      border-radius: 7px;
+      background: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
       font-size: 13px;
-      color: #c62828;
-      font-family: 'Roboto Mono', monospace;
+      white-space: nowrap;
     }
 
     @media (max-width: 600px) {
-      .section { padding: 40px 16px; }
-      .section-title { font-size: 24px; }
+      .section {
+        padding: 64px 16px 72px;
+      }
+
+      .section-desc {
+        margin-bottom: 34px;
+        font-size: 16px;
+      }
+
+      .sub-title {
+        margin-top: 34px;
+        font-size: 18px;
+      }
+
+      .table-scroll-hint {
+        display: block;
+      }
+
+      .api-table {
+        min-width: 620px;
+      }
+
+      .api-table th,
+      .api-table td {
+        padding-inline: 14px;
+      }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,

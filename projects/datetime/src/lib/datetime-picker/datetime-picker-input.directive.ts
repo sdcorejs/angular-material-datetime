@@ -2,7 +2,10 @@ import {
   Directive, ElementRef, HostListener, OnDestroy, OnInit, forwardRef,
   inject, input,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+  ValidationErrors, Validator,
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SdDateAdapter } from '../core/date-adapter';
 import { SD_DATE_FORMATS, SdDateFormats } from '../core/date-formats';
@@ -13,13 +16,16 @@ import { SdDatetimePicker } from './datetime-picker.component';
   standalone: true,
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SdDatetimePickerInput), multi: true },
+    { provide: NG_VALIDATORS, useExisting: forwardRef(() => SdDatetimePickerInput), multi: true },
   ],
   host: {
     '[attr.aria-haspopup]': '"dialog"',
+    '[attr.aria-expanded]': 'pickerOpened',
+    '[attr.aria-controls]': 'pickerPanelId',
     '[disabled]': 'isDisabled || null',
   },
 })
-export class SdDatetimePickerInput<D = Date> implements ControlValueAccessor, OnInit, OnDestroy {
+export class SdDatetimePickerInput<D = Date> implements ControlValueAccessor, Validator, OnInit, OnDestroy {
   readonly #adapter = inject<SdDateAdapter<D>>(SdDateAdapter as never);
   readonly #formats = inject<SdDateFormats>(SD_DATE_FORMATS);
   readonly #elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
@@ -30,12 +36,23 @@ export class SdDatetimePickerInput<D = Date> implements ControlValueAccessor, On
 
   #onChange: (v: D | null) => void = () => {};
   #onTouched: () => void = () => {};
+  #onValidatorChange: () => void = () => {};
   #subs = new Subscription();
+  #picker: SdDatetimePicker<D> | null = null;
+  #pendingValue: D | null = null;
+  #parseError = false;
+  #rawText = '';
+
+  get pickerOpened(): boolean { return this.#picker?.opened() ?? false; }
+  get pickerPanelId(): string | null { return this.#picker?.panelId ?? null; }
 
   ngOnInit(): void {
     const p = this.picker();
+    this.#picker = p;
     p.setAnchor(this.#elementRef.nativeElement);
     p.setInputDisabledState(this.isDisabled);
+    p.setValue(this.#pendingValue);
+    this.#renderValue(this.#pendingValue);
     this.#subs.add(p.applied.subscribe((value: D) => {
       this.#onChange(value);
       this.writeValue(value);
@@ -44,6 +61,7 @@ export class SdDatetimePickerInput<D = Date> implements ControlValueAccessor, On
       this.#onChange(null);
       this.writeValue(null);
     }));
+    this.#subs.add(p.closed.subscribe(() => this.#onTouched()));
   }
 
   ngOnDestroy(): void {
@@ -51,48 +69,73 @@ export class SdDatetimePickerInput<D = Date> implements ControlValueAccessor, On
   }
 
   writeValue(value: D | null): void {
-    const el = this.#elementRef.nativeElement;
-    el.value = value == null
-      ? ''
-      : this.#adapter.format(value, this.#formats.display.datetimeInput);
+    this.#pendingValue = value;
+    this.#parseError = false;
+    this.#rawText = '';
+    this.#renderValue(value);
 
-    /**
-     * Keep the popup selection aligned with values written by Angular forms.
-     * `writeValue` can run before the required picker input is initialized, so
-     * the guard allows early CVA writes while `ngOnInit` completes the binding.
-     */
-    try {
-      if (value != null) {
-        this.picker().select(value);
-      }
-    } catch {
-      // The picker input is not ready yet; a later write will sync the visible value.
-    }
+    this.#picker?.setValue(value);
   }
 
   registerOnChange(fn: (v: D | null) => void): void { this.#onChange = fn; }
   registerOnTouched(fn: () => void): void { this.#onTouched = fn; }
+  registerOnValidatorChange(fn: () => void): void { this.#onValidatorChange = fn; }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (this.#parseError) return { sdDatetimeParse: { text: this.#rawText } };
+    const value = control.value as D | null;
+    const picker = this.#picker;
+    if (value == null || !picker) return null;
+    const min = picker.minDate();
+    const max = picker.maxDate();
+    if (min && this.#adapter.compareDatetime(value, min) < 0) {
+      return { sdDatetimeMin: { min, actual: value } };
+    }
+    if (max && this.#adapter.compareDatetime(value, max) > 0) {
+      return { sdDatetimeMax: { max, actual: value } };
+    }
+    const step = picker.stepMinute();
+    const actualMinute = this.#adapter.getMinute(value);
+    return actualMinute % step === 0
+      ? null
+      : { sdDatetimeMinuteStep: { step, actualMinute } };
+  }
 
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
 
-    /**
-     * Angular forms only call this CVA method on the input directive.
-     * The picker and toggle are separate instances, so forwarding the disabled
-     * state prevents suffix buttons and direct picker calls from opening a
-     * disabled form control.
-     */
-    try {
-      this.picker().setInputDisabledState(isDisabled);
-    } catch {
-      // The picker input is not ready yet; ngOnInit forwards the latest state.
-    }
+    this.#picker?.setInputDisabledState(isDisabled);
   }
 
   @HostListener('blur') onBlur(): void { this.#onTouched(); }
 
   @HostListener('input', ['$event.target.value']) onInput(raw: string): void {
+    this.#rawText = raw;
+    if (raw.trim() === '') {
+      this.#parseError = false;
+      this.#picker?.setValue(null);
+      this.#onChange(null);
+      this.#onValidatorChange();
+      return;
+    }
+
     const parsed = this.#adapter.parse(raw, this.#formats.parse.datetimeInput) as D | null;
-    this.#onChange(parsed);
+    const valid = parsed != null && this.#adapter.isValid(parsed);
+    this.#parseError = !valid;
+    if (valid) {
+      this.#picker?.setValue(parsed);
+      this.#onChange(parsed);
+    } else {
+      this.#onChange(null);
+    }
+    this.#onValidatorChange();
+  }
+
+  #renderValue(value: D | null): void {
+    const secondsFormat = this.#formats.display.datetimeInputWithSeconds;
+    const format = this.#picker?.showSeconds() && secondsFormat != null
+      ? secondsFormat
+      : this.#formats.display.datetimeInput;
+    this.#elementRef.nativeElement.value = value == null ? '' : this.#adapter.format(value, format);
   }
 }

@@ -35,7 +35,7 @@ describe('SdDatetimePickerActions', () => {
     fix.detectChanges();
     const picker = fix.debugElement.query(By.directive(SdDatetimePicker)).componentInstance as SdDatetimePicker<Date>;
     const chosen = new Date(2026, 4, 22, 14, 30, 0);
-    picker.select(chosen);
+    picker.setValue(chosen);
     picker.open();
     fix.detectChanges();
     const spy = jest.fn();

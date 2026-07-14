@@ -66,12 +66,12 @@
   }
 
   &:hover:not(:focus) {
-    background: rgba(0, 0, 0, 0.04);
+    background: var(--mat-sys-surface-container-highest);
   }
 
   &:focus {
-    border-color: var(--mat-sys-primary, #1976d2);
-    background: #fff;
+    border-color: var(--mat-sys-primary);
+    background: var(--mat-sys-surface-container-highest);
   }
 
   &:disabled {
@@ -85,5 +85,5 @@
   font-weight: 600;
   user-select: none;
   padding-bottom: 2px; // align with digit baseline
-  color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
+  color: var(--mat-sys-on-surface-variant);
 }

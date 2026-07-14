@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <b>Datetime, timepicker, and date-range picker for Angular Material — with the date adapter you pick.</b>
+  <b>Datetime and time picker for Angular Material — with an adapter-pluggable core.</b>
 </p>
 
 <p align="center">
-  Standalone components · Signal-driven · Material 3 ready · Adapter-pluggable
+  Standalone components · Signal-driven · Material 3 only · Adapter-pluggable
 </p>
 
 <p align="center">
@@ -57,12 +57,12 @@
 * ✅ `<sd-datetime-picker>` — calendar + time spinner inside a CDK Overlay
 * ✅ `[sdDatetimePicker]` input directive — full `ControlValueAccessor` support (`[formControl]`, `formControlName`, `[(ngModel)]`)
 * ✅ Default actions render automatically (Now / Cancel / Apply) — projection-based override available
-* ✅ Adapter-pluggable — pick native, Moment, date-fns, or your own
+* ✅ Adapter-pluggable — use the included native adapter or implement your own `SdDateAdapter<D>`
 * ✅ Standalone-only components — no NgModule
 * ✅ Signal-driven (Angular 19+ `input()`, `model()`, `output()`, `signal()`, `computed()`)
-* ✅ Material 3 themed surface tokens with Material 2 fallback
+* ✅ Material 3 theming with system-token support and dark-mode compatibility
 * ✅ Tree-shakable — only what you import is bundled
-* ✅ Tested — 84 unit tests, 95%+ coverage on adapter contracts
+* ✅ Tested — unit and integration coverage includes custom non-native date objects
 
 ---
 
@@ -142,6 +142,8 @@ Add `SdDatetimePickerActions`, `SdDatetimePickerNow`, `SdDatetimePickerCancel`, 
 <sd-datetime-picker #picker [showSeconds]="true" [stepMinute]="5"></sd-datetime-picker>
 ```
 
+`stepMinute` uses strict validation: valid minutes must be divisible by the configured step. Invalid step configuration (`<= 0`, fractional, non-finite, or `> 60`) is normalized to `1`.
+
 ---
 
 ### Min / max constraints
@@ -153,6 +155,43 @@ Add `SdDatetimePickerActions`, `SdDatetimePickerNow`, `SdDatetimePickerCancel`, 
   [maxDate]="endOfMonth">
 </sd-datetime-picker>
 ```
+
+`minDate` and `maxDate` are inclusive full datetime boundaries. The input directive exposes `sdDatetimeParse`, `sdDatetimeMin`, `sdDatetimeMax`, and `sdDatetimeMinuteStep` validation errors.
+
+### Global defaults and touch UI
+
+```ts
+import { SD_DATETIME_DEFAULT_OPTIONS } from '@sdcorejs/angular-material-datetime';
+
+providers: [{
+  provide: SD_DATETIME_DEFAULT_OPTIONS,
+  useValue: { showSeconds: true, stepMinute: 15, touchUi: true },
+}]
+```
+
+Explicit picker inputs override injected defaults. `touchUi` uses a centered, viewport-constrained overlay.
+
+### Internationalization
+
+```ts
+import { Injectable } from '@angular/core';
+import { SdDatetimeIntl } from '@sdcorejs/angular-material-datetime';
+
+@Injectable()
+export class VietnameseDatetimeIntl extends SdDatetimeIntl {
+  override dialogLabel = 'Chọn ngày và giờ';
+  override nowLabel = 'Hiện tại';
+  override cancelLabel = 'Hủy';
+  override applyLabel = 'Áp dụng';
+  override hourLabel = 'Giờ';
+  override minuteLabel = 'Phút';
+  override secondLabel = 'Giây';
+}
+
+providers: [{ provide: SdDatetimeIntl, useClass: VietnameseDatetimeIntl }]
+```
+
+After changing labels at runtime, call `intl.changes.next()` so open pickers refresh.
 
 ---
 
@@ -185,28 +224,36 @@ See [the live demo](https://sdcorejs.github.io/angular-material-datetime/) for 9
 | `@sdcorejs/angular-material-datetime-moment` | Moment.js date adapter | v1.x planned |
 | `@sdcorejs/angular-material-datetime-date-fns` | date-fns date adapter | v1.x planned |
 
-All packages publish lockstep with the same version. The Moment and date-fns adapters ship as version-aligned placeholders at v1.0 — their implementations land in subsequent minor releases.
+The Moment and date-fns packages are placeholders with empty public APIs. They are excluded from the release workflow until runtime implementations exist; use the native adapter today.
 
 ---
 
-## 🎨 Theming — Material 2 and Material 3
+## 🎨 Theming — Material 3
 
-The library works out-of-the-box with both Material 2 and Material 3 themes.
+The library requires an Angular Material 3 theme. Define your application theme with `mat.theme(...)` so the picker can read system variables such as `--mat-sys-surface-container`, `--mat-sys-primary`, and `--mat-sys-outline-variant`. These variables keep the picker aligned with your palette and dark mode.
 
-| Theme | Behaviour |
-|---|---|
-| **Material 3** (`mat.theme(...)`) — recommended | Picker chrome reads `--mat-sys-surface-container`, `--mat-sys-primary`, `--mat-sys-outline-variant` — colors track your app theme (including dark mode) |
-| **Material 2** (`mat.core()` + `mat.all-component-themes($theme)`) | M3 tokens not defined → picker falls back to neutral defaults (`#fff` surface, `#1976d2` focus). All Material primitives inside the picker are still themed by Material itself |
-| **Hybrid M2 + M3** | Both layers coexist; the picker prefers M3 tokens when present |
+```scss
+@use '@angular/material' as mat;
 
-For best visual harmony use Material 3. Material 2 is fully supported but the picker surface and divider won't pick up your M2 palette without a custom override.
+html {
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0,
+  ));
+}
+```
+
+### Migrating an existing theme
+
+If your application uses an earlier Angular Material theming API, migrate the application theme to `mat.theme(...)` before adopting this package version. The datetime picker expects Material 3 system variables and does not provide a compatibility styling layer for older theme definitions.
 
 ---
 
 ## 🏗 Build
 
 ```bash
-npm install --legacy-peer-deps
+npm ci
 npm run build:all
 ```
 
@@ -239,7 +286,13 @@ This repo uses [Changesets](https://github.com/changesets/changesets) + a GitHub
 
 When the PR merges, the **Release** workflow:
 - If unreleased changesets exist → opens a "Version Packages" PR that bumps versions + updates CHANGELOG.
-- When that PR is merged → publishes the affected packages to npm and creates the matching git tags.
+- When that PR is merged → builds with `ng-packagr`, verifies the Angular Package Format tarball, and publishes only `dist/datetime`.
+
+The source workspace under `projects/datetime` is never a publish target. For a manually approved release, the exact publish command is:
+
+```bash
+npm publish ./dist/datetime --access public
+```
 
 Requirements:
 - `NPM_TOKEN` repository secret (already configured)
@@ -255,7 +308,7 @@ Requirements:
 | 20.x | 1.x |
 | 21.x | 1.x |
 
-Material 19+, CDK 19+, rxjs 7+.
+Angular, Angular Material, CDK, and Angular Forms 19–21 with RxJS 7 are verified by clean strict-template consumer builds from the packed `dist/datetime` artifact.
 
 ---
 

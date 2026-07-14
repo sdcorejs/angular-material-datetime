@@ -10,9 +10,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     :host {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 4px;
       padding: 8px 12px 12px 12px;
-      border-top: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.08));
+      border-top: 1px solid var(--mat-sys-outline-variant);
     }
     /* "Now" button always anchors to the left; other buttons flow right */
     :host ::ng-deep button[sdDatetimePickerNow] {
