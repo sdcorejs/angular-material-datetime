@@ -394,53 +394,81 @@ import {
   `,
   styles: [`
     .section {
-      padding: 64px 24px;
+      padding: 88px 24px 96px;
+      background: var(--mat-sys-surface);
     }
 
     .section-inner {
-      max-width: 1120px;
+      max-width: 1184px;
       margin: 0 auto;
     }
 
     .section-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin: 0 0 8px;
+      margin: 0 0 12px;
+      color: var(--mat-sys-on-surface);
+      font-size: clamp(32px, 4vw, 46px);
+      font-weight: 750;
+      letter-spacing: -.025em;
+      line-height: 1.12;
     }
 
     .section-desc {
-      font-size: 16px;
-      color: #555;
-      margin: 0 0 40px;
+      max-width: 720px;
+      margin: 0 0 48px;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 17px;
+      line-height: 1.65;
     }
 
     .examples-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
     }
 
     .example-card {
-      border-radius: 12px !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,.08) !important;
-      border: 1px solid #e8eaed;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--mat-sys-outline-variant) 72%, transparent);
+      border-radius: 24px !important;
+      background: var(--mat-sys-surface-container-lowest) !important;
+      box-shadow: var(--mat-sys-level1) !important;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .example-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--mat-sys-level2) !important;
     }
 
     mat-card-header {
-      padding-bottom: 0;
+      padding: 24px 24px 0;
+    }
+
+    mat-card-title {
+      color: var(--mat-sys-on-surface);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+
+    mat-card-subtitle {
+      min-height: 44px;
+      margin-top: 6px;
+      color: var(--mat-sys-on-surface-variant);
+      line-height: 1.5;
     }
 
     mat-card-content {
-      padding-top: 16px !important;
+      padding: 20px 24px 24px !important;
     }
 
     .example-live {
-      padding: 16px;
-      background: #fafafa;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      border: 1px dashed #ddd;
+      min-height: 156px;
+      margin-bottom: 16px;
+      padding: 20px;
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 18px;
+      background: var(--mat-sys-surface-container-low);
     }
 
     .example-field {
@@ -448,27 +476,37 @@ import {
     }
 
     .value-display {
-      margin: 8px 0 0;
+      overflow-wrap: anywhere;
+      margin: 10px 0 0;
+      color: var(--mat-sys-on-surface-variant);
       font-size: 13px;
-      color: #666;
     }
 
     .value-display code {
-      background: #f1f3f4;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 3px 7px;
+      border-radius: 7px;
+      background: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
       font-size: 12px;
     }
 
     .example-code-panel {
       margin-top: 4px;
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 14px !important;
+      background: var(--mat-sys-surface-container-lowest);
+      box-shadow: none !important;
+    }
+
+    .example-code-panel mat-expansion-panel-header {
+      min-height: 48px;
     }
 
     .example-code-panel ::ng-deep .mat-expansion-panel-body {
-      padding: 12px 0 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
+      padding: 12px 16px 16px;
     }
 
     .range-form {
@@ -489,19 +527,58 @@ import {
 
     .validation-msg {
       margin: 8px 0 0;
-      padding: 8px 12px;
-      border-radius: 6px;
+      padding: 10px 12px;
+      border-radius: 10px;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
     }
 
-    .validation-msg.valid { background: #e8f5e9; color: #2e7d32; }
-    .validation-msg.invalid { background: #fce4ec; color: #c62828; }
+    .validation-msg.valid {
+      background: var(--mat-sys-tertiary-container);
+      color: var(--mat-sys-on-tertiary-container);
+    }
 
-    @media (max-width: 768px) {
-      .examples-grid { grid-template-columns: 1fr; }
-      .section { padding: 40px 16px; }
-      .section-title { font-size: 24px; }
+    .validation-msg.invalid {
+      background: var(--mat-sys-error-container);
+      color: var(--mat-sys-on-error-container);
+    }
+
+    @media (max-width: 900px) {
+      .examples-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .section {
+        padding: 64px 16px 72px;
+      }
+
+      .section-desc {
+        margin-bottom: 36px;
+        font-size: 16px;
+      }
+
+      .examples-grid {
+        gap: 20px;
+      }
+
+      mat-card-header {
+        padding: 20px 18px 0;
+      }
+
+      mat-card-subtitle {
+        min-height: 0;
+      }
+
+      mat-card-content {
+        padding: 18px !important;
+      }
+
+      .example-live {
+        min-height: 0;
+        padding: 14px;
+      }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,

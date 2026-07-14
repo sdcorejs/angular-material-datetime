@@ -2,6 +2,7 @@
 
 html {
   color-scheme: light;
+  scroll-behavior: smooth;
   @include mat.theme((
     color: ( primary: mat.$azure-palette, theme-type: light ),
     typography: Roboto,
@@ -9,7 +10,71 @@ html {
   ));
 }
 
-body { margin: 0; font-family: Roboto, sans-serif; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--mat-sys-primary);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+section[id] {
+  scroll-margin-top: 76px;
+}
+
+code,
+pre {
+  font-family: 'Roboto Mono', 'SFMono-Regular', Consolas, monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
 
 @import '@angular/cdk/overlay-prebuilt.css';
 @import 'prismjs/themes/prism-tomorrow.css';

@@ -1,6 +1,25 @@
 {
   "name": "angular-material-datetime",
   "version": "0.0.0",
+  "description": "Material 3 datetime, time, and date-range picker components for Angular 19+.",
+  "author": {
+    "name": "Trần Thuận Nghĩa",
+    "email": "tran.thuan.nghia@gmail.com",
+    "url": "https://github.com/sdcorejs"
+  },
+  "homepage": "https://sdcorejs.github.io/angular-material-datetime/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdcorejs/angular-material-datetime.git"
+  },
+  "keywords": [
+    "angular",
+    "angular-material",
+    "material-3",
+    "datetime-picker",
+    "timepicker",
+    "date-range-picker"
+  ],
   "scripts": {
     "build:all": "ng build datetime && ng build moment-adapter && ng build date-fns-adapter",
     "test": "jest --passWithNoTests",

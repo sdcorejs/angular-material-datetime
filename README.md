@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  Standalone components · Signal-driven · Material 3 ready · Adapter-pluggable
+  Standalone components · Signal-driven · Material 3 only · Adapter-pluggable
 </p>
 
 <p align="center">
@@ -60,9 +60,9 @@
 * ✅ Adapter-pluggable — pick native, Moment, date-fns, or your own
 * ✅ Standalone-only components — no NgModule
 * ✅ Signal-driven (Angular 19+ `input()`, `model()`, `output()`, `signal()`, `computed()`)
-* ✅ Material 3 themed surface tokens with Material 2 fallback
+* ✅ Material 3 theming with system-token support and dark-mode compatibility
 * ✅ Tree-shakable — only what you import is bundled
-* ✅ Tested — 84 unit tests, 95%+ coverage on adapter contracts
+* ✅ Tested — 106 unit tests, 95%+ coverage on adapter contracts
 
 ---
 
@@ -189,17 +189,25 @@ All packages publish lockstep with the same version. The Moment and date-fns ada
 
 ---
 
-## 🎨 Theming — Material 2 and Material 3
+## 🎨 Theming — Material 3
 
-The library works out-of-the-box with both Material 2 and Material 3 themes.
+The library requires an Angular Material 3 theme. Define your application theme with `mat.theme(...)` so the picker can read system variables such as `--mat-sys-surface-container`, `--mat-sys-primary`, and `--mat-sys-outline-variant`. These variables keep the picker aligned with your palette and dark mode.
 
-| Theme | Behaviour |
-|---|---|
-| **Material 3** (`mat.theme(...)`) — recommended | Picker chrome reads `--mat-sys-surface-container`, `--mat-sys-primary`, `--mat-sys-outline-variant` — colors track your app theme (including dark mode) |
-| **Material 2** (`mat.core()` + `mat.all-component-themes($theme)`) | M3 tokens not defined → picker falls back to neutral defaults (`#fff` surface, `#1976d2` focus). All Material primitives inside the picker are still themed by Material itself |
-| **Hybrid M2 + M3** | Both layers coexist; the picker prefers M3 tokens when present |
+```scss
+@use '@angular/material' as mat;
 
-For best visual harmony use Material 3. Material 2 is fully supported but the picker surface and divider won't pick up your M2 palette without a custom override.
+html {
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0,
+  ));
+}
+```
+
+### Migrating an existing theme
+
+If your application uses an earlier Angular Material theming API, migrate the application theme to `mat.theme(...)` before adopting this package version. The datetime picker expects Material 3 system variables and does not provide a compatibility styling layer for older theme definitions.
 
 ---
 
