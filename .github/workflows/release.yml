@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'projects/datetime/**'
+      - '.changeset/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tools/**'
+      - '.github/workflows/release.yml'
 
 concurrency:
   group: release-${{ github.ref }}
@@ -31,6 +38,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Verify release workflow
+        run: npm run test:release-workflow
 
       - name: Lint
         run: npm run lint

@@ -27,6 +27,7 @@
     "test:coverage": "jest --coverage",
     "test:package": "node tools/verify-package.mjs",
     "test:consumer": "node tools/consumer-smoke.mjs",
+    "test:release-workflow": "node --test tools/release-workflow.test.mjs tools/publish-datetime.test.mjs",
     "pack:datetime": "npm pack --dry-run --json ./dist/datetime",
     "lint": "ng lint",
     "ng": "ng",
@@ -36,7 +37,7 @@
     "changeset:publish": "npm run release",
     "version": "changeset version",
     "publish:datetime": "npm publish ./dist/datetime --access public",
-    "release": "npm run build:datetime && npm run test:package && npm run publish:datetime"
+    "release": "npm run build:datetime && npm run test:package && npm run test:release-workflow && node tools/publish-datetime.mjs"
   },
   "private": true,
   "workspaces": [
