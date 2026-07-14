@@ -171,6 +171,8 @@ app-examples .intent-controls {
 }
 
 app-examples .intent-controls button {
+  appearance: none;
+  -webkit-appearance: none;
   min-height: 44px;
   flex: 0 0 auto;
   padding: 0 24px;
@@ -179,12 +181,29 @@ app-examples .intent-controls button {
   background: var(--mat-sys-surface-container-lowest);
   color: var(--mat-sys-on-surface-variant);
   cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+app-examples .intent-controls button:hover {
+  background: color-mix(in srgb, var(--mat-sys-primary) 8%, var(--mat-sys-surface-container-lowest));
+}
+
+app-examples .intent-controls button:active {
+  background: color-mix(in srgb, var(--mat-sys-primary) 12%, var(--mat-sys-surface-container-lowest));
 }
 
 app-examples .intent-controls button[aria-pressed='true'] {
   border-color: var(--mat-sys-primary);
   background: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
+}
+
+app-examples .intent-controls button[aria-pressed='true']:hover {
+  background: color-mix(in srgb, var(--mat-sys-on-primary-container) 8%, var(--mat-sys-primary-container));
+}
+
+app-examples .intent-controls button[aria-pressed='true']:active {
+  background: color-mix(in srgb, var(--mat-sys-on-primary-container) 12%, var(--mat-sys-primary-container));
 }
 
 app-examples .intent-controls span {
