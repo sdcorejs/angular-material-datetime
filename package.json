@@ -1,7 +1,7 @@
 {
   "name": "angular-material-datetime",
   "version": "0.0.0",
-  "description": "Material 3 datetime and time picker components for Angular 19–21.",
+  "description": "Material 3 datetime and time picker components for Angular 19–22.",
   "author": {
     "name": "Trần Thuận Nghĩa",
     "email": "tran.thuan.nghia@gmail.com",
@@ -26,6 +26,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:package": "node tools/verify-package.mjs",
+    "test:package-baseline": "node --test tools/compare-package-baseline.test.mjs && node tools/compare-package-baseline.mjs",
     "test:consumer": "node tools/consumer-smoke.mjs",
     "test:release-workflow": "node --test tools/release-workflow.test.mjs tools/publish-datetime.test.mjs",
     "pack:datetime": "npm pack --dry-run --json ./dist/datetime",
@@ -36,8 +37,8 @@
     "changeset:version": "changeset version",
     "changeset:publish": "npm run release",
     "version": "changeset version",
-    "publish:datetime": "npm publish ./dist/datetime --access public",
-    "release": "npm run build:datetime && npm run test:package && npm run test:release-workflow && node tools/publish-datetime.mjs"
+    "publish:datetime": "node tools/publish-datetime.mjs",
+    "release": "node tools/publish-datetime.mjs"
   },
   "private": true,
   "workspaces": [

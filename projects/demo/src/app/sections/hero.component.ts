@@ -46,7 +46,7 @@ function formatLocalDatetime(value: Date): string {
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="hero-eyebrow">Angular Material 19–21 · Material 3</p>
+          <p class="hero-eyebrow">Angular Material 19–22 · Material 3</p>
           <h1 id="hero-title" class="hero-heading">A datetime picker that speaks Material 3.</h1>
           <p class="hero-lead">
             Calendar and time controls for Angular, with strict forms integration, accessible interactions,
@@ -66,7 +66,7 @@ function formatLocalDatetime(value: Date): string {
           </div>
 
           <div class="capabilities" aria-label="Package capabilities">
-            <span>Angular 19–21</span>
+            <span>Angular 19–22</span>
             <span>Reactive forms</span>
             <span>Accessible dialog</span>
             <span>Adapter-pluggable</span>
