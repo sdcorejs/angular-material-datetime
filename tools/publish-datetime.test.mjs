@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { resolve } from 'node:path';
 import test from 'node:test';
 import { publishDatetimePackage } from './publish-datetime.mjs';
 
@@ -6,7 +7,7 @@ const manifest = {
   name: '@sdcorejs/angular-material-datetime',
   version: '1.0.3',
 };
-const tarball = 'C:\\release\\sdcorejs-angular-material-datetime-1.0.3.tgz';
+const tarball = resolve('release', 'sdcorejs-angular-material-datetime-1.0.3.tgz');
 const sha256 = 'a'.repeat(64);
 const integrity = `sha512-${Buffer.from('local artifact').toString('base64')}`;
 const artifact = { sha256, integrity };

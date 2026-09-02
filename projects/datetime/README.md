@@ -153,14 +153,14 @@ Custom adapters can extend `SdDateAdapter<D>` when an application needs another 
 
 | Dependency | Supported range |
 | --- | --- |
-| `@angular/core` | `>=19.0.0 <22.0.0` |
-| `@angular/common` | `>=19.0.0 <22.0.0` |
-| `@angular/forms` | `>=19.0.0 <22.0.0` |
-| `@angular/material` | `>=19.0.0 <22.0.0` |
-| `@angular/cdk` | `>=19.0.0 <22.0.0` |
+| `@angular/core` | `>=19.0.0 <23.0.0` |
+| `@angular/common` | `>=19.0.0 <23.0.0` |
+| `@angular/forms` | `>=19.0.0 <23.0.0` |
+| `@angular/material` | `>=19.0.0 <23.0.0` |
+| `@angular/cdk` | `>=19.0.0 <23.0.0` |
 | `rxjs` | `^7.0.0` |
 
-Angular 19, 20, and 21 are verified with clean production consumer builds that install the packed Angular Package Format output.
+Angular 19, 20, 21, and 22 are verified with clean production consumer builds that install the same packed Angular Package Format output.
 
 ## Related Packages
 

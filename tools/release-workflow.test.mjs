@@ -1,9 +1,14 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import test from 'node:test';
 
+const root = resolve(import.meta.dirname, '..');
+const verifier = resolve(import.meta.dirname, 'verify-package.mjs');
 const workflow = await readFile(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8');
 const ciWorkflow = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+const consumerHarness = await readFile(new URL('./consumer-smoke.mjs', import.meta.url), 'utf8');
 const rootPackage = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
 
 test('release workflow ignores showcase-only pushes', () => {
@@ -37,7 +42,7 @@ test('release verifies and publishes one immutable tarball', () => {
   for (const major of [19, 20, 21, 22]) {
     assert.match(
       workflow,
-      new RegExp(`consumer-smoke\\.mjs --tarball ['"]?\\$\\{\\{ steps\\.release-artifact\\.outputs\\.tarball \\}\\} --angular=${major}`),
+      new RegExp(`consumer-smoke\\.mjs --tarball ['"]?\\$\\{\\{ steps\\.release-artifact\\.outputs\\.tarball \\}\\}['"]? --angular=${major}`),
     );
   }
 
@@ -45,4 +50,41 @@ test('release verifies and publishes one immutable tarball', () => {
   assert.match(workflow, /SD_DATETIME_RELEASE_SHA256:\s*\$\{\{ steps\.release-artifact\.outputs\.sha256 \}\}/);
   assert.match(workflow, /NODE_AUTH_TOKEN:\s*\$\{\{ secrets\.NPM_TOKEN \}\}/);
   assert.doesNotMatch(workflow, /npm publish \.\/dist\/datetime/);
+});
+
+test('package verifier preserves the positional package-directory API', () => {
+  const missingPackageDirectory = resolve(root, 'missing-positional-package-fixture');
+  const result = spawnSync(process.execPath, [verifier, missingPackageDirectory], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  assert.notEqual(result.status, 0);
+  assert.ok(`${result.stdout}${result.stderr}`.includes(missingPackageDirectory));
+});
+
+test('package verifier rejects ambiguous or unknown tarball arguments', () => {
+  const firstTarball = resolve(root, 'first.tgz');
+  const secondTarball = resolve(root, 'second.tgz');
+  const duplicate = spawnSync(
+    process.execPath,
+    [verifier, `--tarball=${firstTarball}`, `--tarball=${secondTarball}`],
+    { cwd: root, encoding: 'utf8' },
+  );
+  assert.notEqual(duplicate.status, 0);
+  assert.match(`${duplicate.stdout}${duplicate.stderr}`, /duplicate --tarball option/);
+
+  const unknown = spawnSync(
+    process.execPath,
+    [verifier, '--tarball', firstTarball, '--unknown'],
+    { cwd: root, encoding: 'utf8' },
+  );
+  assert.notEqual(unknown.status, 0);
+  assert.match(`${unknown.stdout}${unknown.stderr}`, /unknown argument --unknown/);
+});
+
+test('consumer tarball mode cannot repack the supplied artifact', () => {
+  const branch = consumerHarness.match(/if \(requestedTarball\) \{([\s\S]*?)\n  \} else \{([\s\S]*?)\n  \}/);
+  assert.ok(branch, 'expected explicit supplied-tarball and developer-pack branches');
+  assert.doesNotMatch(branch[1], /runNpm\(\s*\[\s*['"]pack['"]/);
+  assert.equal((branch[2].match(/runNpm\(\s*\[\s*['"]pack['"]/g) ?? []).length, 1);
 });

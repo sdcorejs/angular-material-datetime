@@ -286,12 +286,14 @@ This repo uses [Changesets](https://github.com/changesets/changesets) + a GitHub
 
 When the PR merges, the **Release** workflow:
 - If unreleased changesets exist → opens a "Version Packages" PR that bumps versions + updates CHANGELOG.
-- When that PR is merged → builds with `ng-packagr`, verifies the Angular Package Format tarball, and publishes only `dist/datetime`.
+- When that PR is merged → builds with `ng-packagr`, packs once, verifies that exact Angular Package Format tarball, and publishes those same bytes.
 
-The source workspace under `projects/datetime` is never a publish target. For a manually approved release, the exact publish command is:
+The source workspace under `projects/datetime` and the built `dist/datetime` directory are never direct publish targets. A manually approved release must retain the verified absolute tarball path and SHA-256 produced by the release preflight:
 
 ```bash
-npm publish ./dist/datetime --access public
+export SD_DATETIME_RELEASE_TARBALL=/absolute/path/to/sdcorejs-angular-material-datetime-1.0.4.tgz
+export SD_DATETIME_RELEASE_SHA256=<verified-sha256>
+npm run release
 ```
 
 Requirements:
@@ -307,8 +309,9 @@ Requirements:
 | 19.x | 1.x |
 | 20.x | 1.x |
 | 21.x | 1.x |
+| 22.x | 1.x |
 
-Angular, Angular Material, CDK, and Angular Forms 19–21 with RxJS 7 are verified by clean strict-template consumer builds from the packed `dist/datetime` artifact.
+Angular, Angular Material, CDK, and Angular Forms 19–22 with RxJS 7 are verified by clean strict-template consumer builds from one packed release artifact.
 
 ---
 

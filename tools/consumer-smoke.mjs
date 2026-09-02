@@ -40,8 +40,8 @@ if (process.version !== REQUIRED_NODE_VERSION) {
 }
 
 const root = resolve(import.meta.dirname, '..');
-const workspace = mkdtempSync(join(tmpdir(), 'sd-datetime-consumer-'));
-const npmCli = process.env.npm_execpath;
+const bundledNpmCli = resolve(process.execPath, '..', 'node_modules', 'npm', 'bin', 'npm-cli.js');
+const npmCli = process.env.npm_execpath ?? (existsSync(bundledNpmCli) ? bundledNpmCli : undefined);
 const requestedMajor = readOption('--angular');
 const requestedTarball = readOption('--tarball');
 const angularMajors = requestedMajor ? [Number(requestedMajor)] : Object.keys(ANGULAR_PROFILES).map(Number);
@@ -49,15 +49,26 @@ const angularMajors = requestedMajor ? [Number(requestedMajor)] : Object.keys(AN
 if (angularMajors.some((major) => !ANGULAR_PROFILES[major])) {
   throw new Error('Use --angular=19, --angular=20, --angular=21, or --angular=22.');
 }
+const workspace = mkdtempSync(join(tmpdir(), 'sd-datetime-consumer-'));
 
 function readOption(name) {
-  const equalsArgument = process.argv.find((argument) => argument.startsWith(`${name}=`));
-  if (equalsArgument) {
-    return equalsArgument.slice(name.length + 1);
+  const equalsArguments = process.argv.filter((argument) => argument.startsWith(`${name}=`));
+  const optionIndexes = process.argv.flatMap((argument, index) => argument === name ? [index] : []);
+  if (equalsArguments.length + optionIndexes.length > 1) {
+    throw new Error(`Duplicate option: ${name}`);
+  }
+  if (equalsArguments.length === 1) {
+    const value = equalsArguments[0].slice(name.length + 1);
+    if (!value) throw new Error(`${name} requires a value.`);
+    return value;
   }
 
-  const optionIndex = process.argv.indexOf(name);
-  return optionIndex === -1 ? undefined : process.argv[optionIndex + 1];
+  if (optionIndexes.length === 1) {
+    const value = process.argv[optionIndexes[0] + 1];
+    if (!value || value.startsWith('--')) throw new Error(`${name} requires a value.`);
+    return value;
+  }
+  return undefined;
 }
 
 function runNpm(args, options = {}) {
@@ -198,6 +209,7 @@ bootstrapApplication(ConsumerApp, { providers: [provideSdNativeDateAdapter()] })
 
 function assertResolvedVersions(consumer, angularMajor) {
   const lock = JSON.parse(readFileSync(join(consumer, 'package-lock.json'), 'utf8'));
+  const consumerManifest = JSON.parse(readFileSync(join(consumer, 'package.json'), 'utf8'));
   const packageVersion = (name) => lock.packages?.[`node_modules/${name}`]?.version;
   const expectedTypescriptMajor = angularMajor === 22 ? 6 : 5;
   const expectedZoneMinor = angularMajor === 22 ? '0.16.' : '0.15.';
@@ -212,6 +224,8 @@ function assertResolvedVersions(consumer, angularMajor) {
     '@angular/material',
     '@angular/platform-browser',
     '@angular/compiler-cli',
+    '@angular-devkit/build-angular',
+    '@angular/cli',
   ]) {
     const version = packageVersion(packageName);
     if (!version?.startsWith(`${angularMajor}.`)) {
@@ -227,6 +241,24 @@ function assertResolvedVersions(consumer, angularMajor) {
   const zoneVersion = packageVersion('zone.js');
   if (!zoneVersion?.startsWith(expectedZoneMinor)) {
     throw new Error(`Expected Zone.js ${expectedZoneMinor}x, received ${zoneVersion ?? 'missing'}.`);
+  }
+
+  if (
+    Object.hasOwn(consumerManifest, 'overrides')
+    || Object.hasOwn(lock, 'overrides')
+    || Object.hasOwn(lock.packages?.[''] ?? {}, 'overrides')
+  ) {
+    throw new Error('Consumer verification forbids npm overrides.');
+  }
+
+  const angularEntryPattern = /(?:^|\/)node_modules\/(@angular\/(?:animations|cdk|cli|common|compiler|compiler-cli|core|forms|material|platform-browser)|@angular-devkit\/build-angular)$/;
+  for (const [packagePath, packageEntry] of Object.entries(lock.packages ?? {})) {
+    const packageName = packagePath.replaceAll('\\', '/').match(angularEntryPattern)?.[1];
+    if (packageName && !packageEntry.version?.startsWith(`${angularMajor}.`)) {
+      throw new Error(
+        `Expected every ${packageName} lock entry to resolve to ${angularMajor}.x; ${packagePath} resolved ${packageEntry.version ?? 'missing'}.`,
+      );
+    }
   }
 }
 

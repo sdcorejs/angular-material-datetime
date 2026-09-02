@@ -31,7 +31,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             <li><a href="https://github.com/sdcorejs" target="_blank" rel="noopener noreferrer">GitHub organization <span aria-hidden="true">&#8599;</span></a></li>
             <li><a href="https://www.npmjs.com/org/sdcorejs" target="_blank" rel="noopener noreferrer">npm organization <span aria-hidden="true">&#8599;</span></a></li>
           </ul>
-          <p class="footer-stack">Verified with Angular 19–21 · Material 3 · Standalone components and signals.</p>
+          <p class="footer-stack">Verified with Angular 19–22 · Material 3 · Standalone components and signals.</p>
         </div>
 
         <div class="footer-bottom">

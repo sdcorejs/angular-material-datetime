@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [20, 22]
+        node: [20, '22.22.3']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,10 +24,30 @@ jobs:
       - run: npm run test:coverage
       - run: npm run build:all
       - run: npm run test:package
-      - run: npm run test:consumer
-        if: matrix.node == 22
       - uses: actions/upload-artifact@v4
-        if: matrix.node == 22
+        if: matrix.node == '22.22.3'
         with:
           name: coverage
           path: coverage/
+
+  packed-consumers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.3'
+          cache: npm
+      - run: npm ci
+      - run: npm run build:datetime
+      - name: Pack consumer artifact once
+        shell: bash
+        run: |
+          set -euo pipefail
+          pack_dir="$RUNNER_TEMP/datetime-consumer"
+          mkdir -p "$pack_dir"
+          pack_json="$(npm pack ./dist/datetime --json --pack-destination "$pack_dir")"
+          filename="$(node -e 'process.stdout.write(JSON.parse(process.argv[1])[0].filename)' "$pack_json")"
+          echo "SD_DATETIME_CI_TARBALL=$(realpath "$pack_dir/$filename")" >> "$GITHUB_ENV"
+      - run: node tools/consumer-smoke.mjs --tarball "$SD_DATETIME_CI_TARBALL" --angular=19
+      - run: node tools/consumer-smoke.mjs --tarball "$SD_DATETIME_CI_TARBALL" --angular=22

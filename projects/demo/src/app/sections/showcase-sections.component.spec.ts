@@ -77,6 +77,7 @@ describe('showcase hero workbench', () => {
     const timeInputs = fixture.nativeElement.querySelectorAll('.inline-picker .sd-time-spinner__digits') as NodeListOf<HTMLInputElement>;
 
     expect(fixture.nativeElement.querySelector('h1').textContent).toContain('speaks Material 3');
+    expect(fixture.nativeElement.textContent).toContain('Angular 19–22');
     expect(calendarCells).toHaveLength(31);
     expect([...timeInputs].map((input) => input.value)).toEqual(['10', '30']);
     expect(fixture.nativeElement.querySelector('.preview-value code').textContent.trim()).toBe('2026-07-14T10:30');
@@ -212,7 +213,7 @@ describe('showcase reference and project information', () => {
     const email = fixture.nativeElement.querySelector('a[href="mailto:tran.thuan.nghia@gmail.com"]') as HTMLAnchorElement;
     const text = fixture.nativeElement.textContent as string;
 
-    expect(text).toContain('Verified with Angular 19');
+    expect(text).toContain('Verified with Angular 19–22');
     expect(text).toContain('Material 3');
     expect(email.textContent?.trim()).toBe('tran.thuan.nghia@gmail.com');
   });

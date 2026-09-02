@@ -1,7 +1,7 @@
 {
   "name": "@sdcorejs/angular-material-datetime",
   "version": "1.0.3",
-  "description": "Material 3 datetime and time picker for Angular 19–21 with pluggable date adapters",
+  "description": "Material 3 datetime and time picker for Angular 19–22 with pluggable date adapters",
   "author": {
     "name": "Trần Thuận Nghĩa",
     "email": "tran.thuan.nghia@gmail.com",
@@ -25,11 +25,11 @@
   ],
   "sideEffects": false,
   "peerDependencies": {
-    "@angular/cdk": ">=19.0.0 <22.0.0",
-    "@angular/common": ">=19.0.0 <22.0.0",
-    "@angular/core": ">=19.0.0 <22.0.0",
-    "@angular/forms": ">=19.0.0 <22.0.0",
-    "@angular/material": ">=19.0.0 <22.0.0",
+    "@angular/cdk": ">=19.0.0 <23.0.0",
+    "@angular/common": ">=19.0.0 <23.0.0",
+    "@angular/core": ">=19.0.0 <23.0.0",
+    "@angular/forms": ">=19.0.0 <23.0.0",
+    "@angular/material": ">=19.0.0 <23.0.0",
     "rxjs": "^7.0.0"
   }
 }

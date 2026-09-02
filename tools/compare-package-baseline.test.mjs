@@ -22,10 +22,21 @@ const baseManifest = {
     './package.json': { default: './package.json' },
   },
   peerDependencies: {
+    '@angular/cdk': '>=19.0.0 <22.0.0',
+    '@angular/common': '>=19.0.0 <22.0.0',
     '@angular/core': '>=19.0.0 <22.0.0',
+    '@angular/forms': '>=19.0.0 <22.0.0',
+    '@angular/material': '>=19.0.0 <22.0.0',
     rxjs: '^7.0.0',
   },
 };
+
+const approvedPeerDependencies = Object.fromEntries(
+  Object.entries(baseManifest.peerDependencies).map(([name, range]) => [
+    name,
+    name.startsWith('@angular/') ? '>=19.0.0 <23.0.0' : range,
+  ]),
+);
 
 async function withPackage(manifest, declarations, callback) {
   const directory = await mkdtemp(join(tmpdir(), 'sd-datetime-surface-'));
@@ -52,10 +63,7 @@ test('allows only release description, version, and peer metadata changes', asyn
     ...baseManifest,
     version: '1.0.4',
     description: 'Angular 19–22',
-    peerDependencies: {
-      ...baseManifest.peerDependencies,
-      '@angular/core': '>=19.0.0 <23.0.0',
-    },
+    peerDependencies: approvedPeerDependencies,
   };
 
   await withPackage(baseManifest, declarations, async (baselineDirectory) => {
@@ -66,6 +74,27 @@ test('allows only release description, version, and peer metadata changes', asyn
     });
   });
 });
+
+for (const [label, peerDependencies] of [
+  ['wildcard range', { ...approvedPeerDependencies, '@angular/core': '*' }],
+  ['narrowed lower bound', { ...approvedPeerDependencies, '@angular/core': '>=22.0.0 <23.0.0' }],
+  ['unchanged upper bound', { ...approvedPeerDependencies, '@angular/core': '>=19.0.0 <22.0.0' }],
+  ['mismatched peer ranges', { ...approvedPeerDependencies, '@angular/material': '>=19.0.0 <24.0.0' }],
+]) {
+  test(`rejects ${label} for an approved Angular peer`, async () => {
+    const candidateManifest = { ...baseManifest, peerDependencies };
+    await withPackage(baseManifest, declarations, async (baselineDirectory) => {
+      await withPackage(candidateManifest, declarations, async (candidateDirectory) => {
+        const result = comparePackageSurfaces(
+          await createPackageSurface(baselineDirectory),
+          await createPackageSurface(candidateDirectory),
+        );
+        assert.equal(result.compatible, false);
+        assert.match(result.differences.join('\n'), /must change exactly/);
+      });
+    });
+  });
+}
 
 test('rejects root export-map drift', async () => {
   const candidateManifest = {
@@ -114,6 +143,42 @@ test('rejects public declaration path and symbol drift', async () => {
       );
       assert.equal(result.compatible, false);
       assert.match(result.differences.join('\n'), /declaration inventory/);
+    });
+  });
+});
+
+test('rejects signature-only declaration drift', async () => {
+  const changedDeclarations = {
+    ...declarations,
+    'lib/public-thing.d.ts': 'export declare class PublicThing { value: string; }\nexport interface PublicOptions { enabled: boolean; }\n',
+  };
+
+  await withPackage(baseManifest, declarations, async (baselineDirectory) => {
+    await withPackage(baseManifest, changedDeclarations, async (candidateDirectory) => {
+      const result = comparePackageSurfaces(
+        await createPackageSurface(baselineDirectory),
+        await createPackageSurface(candidateDirectory),
+      );
+      assert.equal(result.compatible, false);
+      assert.match(result.differences.join('\n'), /declaration signature/);
+    });
+  });
+});
+
+test('rejects non-Angular peer drift', async () => {
+  const candidateManifest = {
+    ...baseManifest,
+    peerDependencies: { ...baseManifest.peerDependencies, rxjs: '^8.0.0' },
+  };
+
+  await withPackage(baseManifest, declarations, async (baselineDirectory) => {
+    await withPackage(candidateManifest, declarations, async (candidateDirectory) => {
+      const result = comparePackageSurfaces(
+        await createPackageSurface(baselineDirectory),
+        await createPackageSurface(candidateDirectory),
+      );
+      assert.equal(result.compatible, false);
+      assert.match(result.differences.join('\n'), /peer dependency rxjs/);
     });
   });
 });
