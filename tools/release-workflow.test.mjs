@@ -28,20 +28,45 @@ test('release script publishes the immutable tarball before creating the Changes
   assert.doesNotMatch(rootPackage.scripts.release, /build|pack|test:/);
 });
 
-test('release installs an OIDC-capable npm CLI before dependency installation', () => {
+test('release installs an OIDC-capable npm CLI only after artifact verification', () => {
   const setupNodeIndex = workflow.indexOf("node-version: '22.22.3'");
-  const setupNpmIndex = workflow.indexOf('npm install --global npm@11.19.1');
-  const installDependenciesIndex = workflow.indexOf('run: npm ci');
+  const setupNpmCommand = 'npm install --global npm@11.19.1';
+  const setupNpmIndex = workflow.indexOf(setupNpmCommand);
+  const publishIndex = workflow.indexOf('- name: Create Release Pull Request or Publish');
+  const namedSteps = [...workflow.matchAll(/^ {6}- name: ([^\r\n]+)\r?$/gm)];
+  const verificationSteps = [
+    'Install dependencies',
+    'Verify release workflow',
+    'Test package baseline comparator',
+    'Lint',
+    'Test',
+    'Build all libraries',
+    'Pack release artifact once',
+    'Verify Angular Package Format output',
+    'Compare public package surface with 1.0.3',
+    'Verify Angular 19 packed consumer',
+    'Verify Angular 20 packed consumer',
+    'Verify Angular 21 packed consumer',
+    'Verify Angular 22 packed consumer',
+    'Upload verified release artifact',
+  ];
 
   assert.match(workflow, /id-token:\s*write/);
   assert.doesNotMatch(workflow, /^\s+NPM_TOKEN:/m);
   assert.doesNotMatch(workflow, /^\s+NODE_AUTH_TOKEN:/m);
   assert.doesNotMatch(workflow, /^\s+registry-url:/m);
   assert.ok(setupNodeIndex >= 0, 'expected the exact release Node version');
+  assert.equal(workflow.split(setupNpmCommand).length - 1, 1, 'expected one npm setup command');
   assert.ok(setupNpmIndex > setupNodeIndex, 'expected npm setup after Node setup');
-  assert.ok(
-    installDependenciesIndex > setupNpmIndex,
-    'expected OIDC-capable npm before npm ci and the publish command',
+  for (const stepName of verificationSteps) {
+    const matchingSteps = namedSteps.filter((match) => match[1] === stepName);
+    assert.equal(matchingSteps.length, 1, `expected one ${stepName} step`);
+    assert.ok(matchingSteps[0].index < setupNpmIndex, `expected ${stepName} before npm setup`);
+  }
+  assert.ok(publishIndex > setupNpmIndex, 'expected OIDC-capable npm before the publish command');
+  assert.match(
+    workflow,
+    /- name: Setup npm for trusted publishing\s*\n\s+run: npm install --global npm@11\.19\.1\s*\n\s*\n\s+- name: Create Release Pull Request or Publish/,
   );
 });
 
