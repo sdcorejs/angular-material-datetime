@@ -1,5 +1,11 @@
 # @sdcorejs/angular-material-datetime
 
+## 1.0.4
+
+### Patch Changes
+
+- [#3](https://github.com/sdcorejs/angular-material-datetime/pull/3) [`02a17ae`](https://github.com/sdcorejs/angular-material-datetime/commit/02a17ae68940f4f0e04e299bb682e6e59701c34e) Thanks [@sdcorejs](https://github.com/sdcorejs)! - Widen Angular peer compatibility through Angular 22 and verify the exact packed artifact with strict Angular 19–22 consumer builds.
+
 ## 1.0.3
 
 ### Patch Changes

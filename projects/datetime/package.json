@@ -1,6 +1,6 @@
 {
   "name": "@sdcorejs/angular-material-datetime",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Material 3 datetime and time picker for Angular 19–22 with pluggable date adapters",
   "author": {
     "name": "Trần Thuận Nghĩa",
