@@ -28,6 +28,23 @@ test('release script publishes the immutable tarball before creating the Changes
   assert.doesNotMatch(rootPackage.scripts.release, /build|pack|test:/);
 });
 
+test('release installs an OIDC-capable npm CLI before dependency installation', () => {
+  const setupNodeIndex = workflow.indexOf("node-version: '22.22.3'");
+  const setupNpmIndex = workflow.indexOf('npm install --global npm@11.19.1');
+  const installDependenciesIndex = workflow.indexOf('run: npm ci');
+
+  assert.match(workflow, /id-token:\s*write/);
+  assert.doesNotMatch(workflow, /^\s+NPM_TOKEN:/m);
+  assert.doesNotMatch(workflow, /^\s+NODE_AUTH_TOKEN:/m);
+  assert.doesNotMatch(workflow, /^\s+registry-url:/m);
+  assert.ok(setupNodeIndex >= 0, 'expected the exact release Node version');
+  assert.ok(setupNpmIndex > setupNodeIndex, 'expected npm setup after Node setup');
+  assert.ok(
+    installDependenciesIndex > setupNpmIndex,
+    'expected OIDC-capable npm before npm ci and the publish command',
+  );
+});
+
 test('Angular packed-consumer CI runs on exact Node 22.22.3 and covers boundary majors', () => {
   assert.match(ciWorkflow, /node-version:\s*['"]22\.22\.3['"]/);
   assert.match(ciWorkflow, /consumer-smoke\.mjs[^\n]*--angular=19/);
@@ -52,7 +69,7 @@ test('release verifies and publishes one immutable tarball', () => {
 
   assert.match(workflow, /SD_DATETIME_RELEASE_TARBALL:\s*\$\{\{ steps\.release-artifact\.outputs\.tarball \}\}/);
   assert.match(workflow, /SD_DATETIME_RELEASE_SHA256:\s*\$\{\{ steps\.release-artifact\.outputs\.sha256 \}\}/);
-  assert.match(workflow, /NODE_AUTH_TOKEN:\s*\$\{\{ secrets\.NPM_TOKEN \}\}/);
+  assert.doesNotMatch(workflow, /NODE_AUTH_TOKEN:\s*\$\{\{ secrets\.NPM_TOKEN \}\}/);
   assert.doesNotMatch(workflow, /npm publish \.\/dist\/datetime/);
 });
 
