@@ -38,7 +38,7 @@
     "changeset:publish": "npm run release",
     "version": "changeset version",
     "publish:datetime": "node tools/publish-datetime.mjs",
-    "release": "node tools/publish-datetime.mjs"
+    "release": "node tools/publish-datetime.mjs && changeset tag"
   },
   "private": true,
   "workspaces": [
