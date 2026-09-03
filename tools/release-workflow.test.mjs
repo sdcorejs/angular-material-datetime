@@ -18,8 +18,12 @@ test('release workflow ignores showcase-only pushes', () => {
   assert.doesNotMatch(workflow, /- ['"]?projects\/demo\/\*\*['"]?/);
 });
 
-test('release script uses the idempotent datetime publisher', () => {
-  assert.equal(rootPackage.scripts.release, 'node tools/publish-datetime.mjs');
+test('release script publishes the immutable tarball before creating the Changesets tag', () => {
+  assert.equal(
+    rootPackage.scripts.release,
+    'node tools/publish-datetime.mjs && changeset tag',
+  );
+  assert.match(workflow, /publish:\s*npm run release/);
   assert.doesNotMatch(rootPackage.scripts.release, /npm run publish:datetime/);
   assert.doesNotMatch(rootPackage.scripts.release, /build|pack|test:/);
 });
